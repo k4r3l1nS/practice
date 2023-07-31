@@ -4,10 +4,8 @@ import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.rates.Currency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,31 +17,26 @@ import java.util.List;
 @AllArgsConstructor
 public class OperationListDto {
 
-    private Long clientId;
+    CommonInfo commonInfo;
+    Page<OperationInfo> operations;
 
-    private Long accountId;
+    @Getter
+    @Setter
+    @Builder
+    private final static class CommonInfo {
 
-    private String ownerFullName;
-
-    private String accountName;
-
-    private Currency currency;
-
-    private double balance;
-
-    List<OperationInfo> operations = new ArrayList<>();
-
-    public void addOperation(OperationView operationView) {
-
-        operations.add(new OperationInfo(operationView.getOperationId(), operationView.getDeposit(),
-                operationView.getWithdrawal(), operationView.getOperationDateTime(), operationView.getAccountName()));
+        private Long clientId;
+        private Long accountId;
+        private String ownerFullName;
+        private String accountName;
+        private Currency currency;
+        private Double balance;
     }
 
     @Getter
     @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public class OperationInfo {
+    @Builder
+    public final static class OperationInfo {
 
         private Long operationId;
 
@@ -52,22 +45,32 @@ public class OperationListDto {
         private Double withdrawal;
 
         private LocalDateTime operationDateTime;
-
-        private String accountName;
     }
 
-    public static OperationListDto valueFrom(List<OperationView> operationViews) {
+    public boolean isEmpty() {
+
+        return operations.isEmpty();
+    }
+
+    public static OperationListDto valueFrom(Page<OperationView> operationViews, OperationView representativeView) {
 
         OperationListDto operationListDto = new OperationListDto();
 
-        operationListDto.setBalance(operationViews.get(0).getBalance());
-        operationListDto.setAccountName(operationViews.get(0).getAccountName());
-        operationListDto.setOwnerFullName(operationViews.get(0).getOwnerFullName());
-        operationListDto.setCurrency(operationViews.get(0).getCurrency());
-        operationListDto.setAccountId(operationViews.get(0).getAccountId());
-        operationListDto.setClientId(operationViews.get(0).getClientId());
+        operationListDto.setCommonInfo(CommonInfo.builder()
+                        .accountId(representativeView.getAccountId()).accountName(representativeView.getAccountName())
+                        .balance(representativeView.getBalance()).clientId(representativeView.getClientId())
+                        .currency(representativeView.getCurrency()).ownerFullName(representativeView.getOwnerFullName())
+                .build());
 
-        operationViews.stream().forEach(operationView -> operationListDto.addOperation(operationView));
+        Page<OperationInfo> operationInfoPage = operationViews.isEmpty() ? Page.empty() :
+                operationViews.map(operationView ->
+                        OperationInfo.builder()
+                                .operationId(operationView.getOperationId()).deposit(operationView.getDeposit())
+                                .withdrawal(operationView.getWithdrawal())
+                                .operationDateTime(operationView.getOperationDateTime())
+                                .build());
+
+        operationListDto.setOperations(operationInfoPage);
 
         return operationListDto;
     }

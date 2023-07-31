@@ -18,11 +18,9 @@ public class OperationView {
     @Column(name = "operation_id")
     private Long operationId;
 
-    @Id
     @Column(name = "account_id")
     private Long accountId;
 
-    @Id
     @Column(name = "client_id")
     private Long clientId;
 

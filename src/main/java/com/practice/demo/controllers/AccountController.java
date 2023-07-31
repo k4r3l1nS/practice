@@ -2,6 +2,10 @@ package com.practice.demo.controllers;
 
 import com.practice.demo.dto.AccountDto;
 import com.practice.demo.dto.OperationListDto;
+import com.practice.demo.dto.paging_and_sotring.ClientPagingAndSortingDto;
+import com.practice.demo.dto.paging_and_sotring.OperationPagingAndSortingDto;
+import com.practice.demo.dto.specification.models.ClientSpecificationDto;
+import com.practice.demo.dto.specification.models.OperationSpecificationDto;
 import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.db_views.OperationView;
@@ -9,6 +13,7 @@ import com.practice.demo.models.rates.Currency;
 import com.practice.demo.models.rates.CurrencyRates;
 import com.practice.demo.service.AccountService;
 import com.practice.demo.service.ClientService;
+import com.practice.demo.service.OperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,16 +25,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final ClientService clientService;
     private final AccountService accountService;
+    private final OperationService operationService;
 
     @GetMapping("/clients/{client_id}/account-{account_id}")
     public String accountById(@PathVariable(value = "client_id") Long clientId,
-                              @PathVariable(value = "account_id") Long accountId, Model model) {
+                              @PathVariable(value = "account_id") Long accountId,
+                              @ModelAttribute OperationPagingAndSortingDto pagingAndSortingDto,
+                              @ModelAttribute OperationSpecificationDto operationSpecificationDto, Model model) {
 
-        OperationListDto operationListDto = accountService.findAllOperationsByAccountId(accountId);
+        pagingAndSortingDto.fillEmptyFields();
+        operationSpecificationDto.fillEmptyFields();
 
-        model.addAttribute("operation_list_dto", operationListDto);
+        model.addAttribute("PASdto", pagingAndSortingDto);
+        model.addAttribute("OSdto", operationSpecificationDto);
+
+        OperationListDto operationListDto = OperationListDto.valueFrom(
+                operationService.fetchNextPageByAccountId(pagingAndSortingDto, operationSpecificationDto, accountId),
+                operationService.findOneOperationView(accountId));
+
+        model.addAttribute("operationListDto", operationListDto);
 
         return "account-by-id";
     }

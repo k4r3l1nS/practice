@@ -36,7 +36,6 @@ public class Operation {
     @Column(name = "currency_from")
     private Currency currencyFrom;
 
-
     public Operation() {
 
         this.operationDateTime = LocalDateTime.now();

@@ -53,7 +53,7 @@ public class ClientController {
 
         AccountListDto accountListDto = AccountListDto.valueFrom(
                 accountService.fetchNextPageByClientId(accountPagingAndSortingDto, accountSpecificationDto, clientId),
-                clientId, accountService.getFullNameFromViewByClientId(clientId));
+                accountService.findOneAccountView(clientId));
 
         model.addAttribute("accountListDto", accountListDto);
         model.addAttribute("currencies", Currency.values());

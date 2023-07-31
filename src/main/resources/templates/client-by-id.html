@@ -9,7 +9,7 @@
     <header th:insert="blocks/header :: header"></header>
 
     <h3>Click the following button to add new account:</h3>
-    <a th:href="'/clients/'+${accountListDto.clientId}+'/new-account'">
+    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/new-account'">
         <button class="btn btn-success"><h5>Add</h5></button>
     </a>
     <br>
@@ -17,7 +17,7 @@
     <br>
 
     <h4>
-        <form th:action="'/clients/'+${accountListDto.clientId}" method="get" th:object="${PASdto}">
+        <form th:action="'/clients/'+${accountListDto.commonInfo.clientId}" method="get" th:object="${PASdto}">
             Sort by:&nbsp;
             <span>
                     <select th:field="*{sortBy}">
@@ -54,7 +54,7 @@
             <br>
         </form>
 
-        <form th:action="'/clients/'+${accountListDto.clientId}" method="get" th:object="${ASdto}">
+        <form th:action="'/clients/'+${accountListDto.commonInfo.clientId}" method="get" th:object="${ASdto}">
             <br>
             Filter:
             <br>
@@ -118,7 +118,7 @@
     <br>
 
     <br>
-    <h3 th:text="${accountListDto.isEmpty()} ? 'There are no accounts which belong to '+${accountListDto.getFullName()}+'!' : 'All accounts of '+${accountListDto.getFullName()}+':'"></h3>
+    <h3 th:text="${accountListDto.isEmpty()} ? 'There are no accounts which belong to '+${accountListDto.commonInfo.getFullName()}+'!' : 'All accounts of '+${accountListDto.commonInfo.getFullName()}+':'"></h3>
 
     <span th:if="${accountListDto.isEmpty()} == false">
         <br>
@@ -128,61 +128,61 @@
                     <span th:text="${PASdto.page + 1}"></span>
                     <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages()}">
                         &nbsp;
-                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page + 2}"></a>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page + 2}"></a>
                     </span>
                     <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages() - 1}">
                         <span th:if="${PASdto.page + 1}!=${accountListDto.accounts.getTotalPages()-2}">&ensp;...</span>
                         &nbsp;
-                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 1}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages()}"></a>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 1}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages()}"></a>
                     </span>
                 </span>
                 <span th:if="${PASdto.page}==${accountListDto.accounts.getTotalPages()-1} and ${accountListDto.accounts.getTotalPages()>1}">
                     <span th:if="1 < ${accountListDto.accounts.getTotalPages()}">
-                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page=0&size='+${PASdto.size}">1</a>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page=0&size='+${PASdto.size}">1</a>
                         &nbsp;
                     </span>
                     <span th:if="2 < ${accountListDto.accounts.getTotalPages()}">
                         <span th:if="${accountListDto.accounts.getTotalPages() != 3}">...&ensp;</span>
-                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 2}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages() - 1}"></a>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 2}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages() - 1}"></a>
                         &nbsp;
                     </span>
                     <span th:text="${PASdto.page + 1}"></span>
                 </span>
                 <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${accountListDto.accounts.getTotalPages() - 1})">
-                    <a th:href="'/clients/'+${accountListDto.clientId}+'?page=0&size='+${PASdto.size}" th:text="'1'"></a>
+                    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page=0&size='+${PASdto.size}" th:text="'1'"></a>
                     &nbsp;
                     <span th:if="${PASdto.page} > 2">...&ensp;</span>
 
                     <span th:if="${PASdto.page} > 1">
-                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${PASdto.page - 1}+'&size='+${PASdto.size}" th:text="${PASdto.page}"></a>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page - 1}+'&size='+${PASdto.size}" th:text="${PASdto.page}"></a>
                         &nbsp;
                     </span>
                     <span th:text="${PASdto.page+1}"></span>
                     &nbsp;
                     <span th:if="${accountListDto.accounts.getTotalPages()}-2 > ${PASdto.page}">
-                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page+2}"></a>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page+2}"></a>
                         &nbsp;
                     </span>
 
 
                     <span th:if="${PASdto.page} < ${accountListDto.accounts.getTotalPages() - 3}">...&ensp;</span>
-                    <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${accountListDto.accounts.getTotalPages()-1}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages()}"></a>
+                    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages()-1}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages()}"></a>
                 </span>
         </h4>
         <br>
 
 
         <div th:each="account : ${accountListDto.getAccounts()}">
-            <a th:href="'/clients/'+${accountListDto.clientId}+'/account-'+${account.getAccountId()}">
+            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.getAccountId()}">
                 <h4 th:text="${account.getAccountName()}+' (id = '+${account.getAccountId()}+')'"></h4>
             </a>
             <h5 th:text="'Balance: '+${account.getBalance()}+' '+${account.getCurrency().toString()}"></h5>
             <h5 th:text="'Latest operation: '+${account.getLatestOperation().getDayOfMonth()}+' '+${account.getLatestOperation().getMonth().toString()}+' '+${account.getLatestOperation().getYear()}+' '+${account.getLatestOperation().getHour()}+':'+${account.getLatestOperation().getMinute()}+':'+${account.getLatestOperation().getSecond()}"></h5>
             <h5 th:text="'Number of operations: '+${account.numberOfOperations}"></h5>
-            <a th:href="'/clients/'+${accountListDto.clientId}+'/account-'+${account.accountId}+'/edit'">
+            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/edit'">
                 <button type="button" class="btn btn-primary">Edit</button>
             </a>
-            <a th:href="'/clients/'+${accountListDto.clientId}+'/account-'+${account.accountId}+'/deactivate'">
+            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/deactivate'">
                 <button type="button" class="btn btn-danger">Deactivate</button>
             </a>
             <br>
@@ -191,7 +191,7 @@
     </span>
     <br>
     <h3>Click the following link to add new account:</h3>
-    <a th:href="'/clients/'+${accountListDto.getClientId()}+'/new-account'">
+    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/new-account'">
         <h4 th:text="'Add'"></h4>
     </a>
 

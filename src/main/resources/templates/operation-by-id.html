@@ -7,24 +7,18 @@
 </head>
 <body>
     <header th:insert="blocks/header :: header"></header>
-    <h3>Click the following button to add new account:</h3>
-    <a th:href="'/clients/'+${operationListDto.clientId}+'/new-account'">
-        <button class="btn btn-success"><h5>Add</h5></button>
+
+    <h3 th:text="'Information about operation id='+${operation.operationId}+':'"></h3>
+    <br>
+
+    <a th:href="'/clients/'+${operation.clientId}+'/account-'+${operation.accountId}">
+        <h4 th:text="'Account: '+${operation.getAccountName()}"></h4>
     </a>
-    <br>
-    <br>
-    <br>
 
-
-  <h3 th:text="'Information about operation id='+${operation.operationId}+':'"></h3>
-  <br>
-  <a th:href="'/clients/'+${operation.clientId}+'/account-'+${operation.accountId}">
-    <h4 th:text="'Account: '+${operation.getAccountName()}"></h4>
-  </a>
-  <h4 th:text="'Date: '+${operation.getOperationDateTime().getDayOfMonth()}+' '+${operation.getOperationDateTime().getMonth().toString()}+' '+${operation.getOperationDateTime().getYear()}"></h4>
-  <h4 th:text="'Daytime: '+${operation.getOperationDateTime().getHour()}+':'+${operation.getOperationDateTime().getMinute()}+':'+${operation.getOperationDateTime().getSecond()}"></h4>
-  <br>
-  <h4 th:text="'Main operation'"></h4>
-  <h4 th:text="${operation.getDeposit()} ? 'Deposit: '+${operation.getDeposit()} : 'Withdrawal : '+${operation.getWithdrawal()}"></h4>
+    <h4 th:text="'Date: '+${operation.getOperationDateTime().getDayOfMonth()}+' '+${operation.getOperationDateTime().getMonth().toString()}+' '+${operation.getOperationDateTime().getYear()}"></h4>
+    <h4 th:text="'Daytime: '+${operation.getOperationDateTime().getHour()}+':'+${operation.getOperationDateTime().getMinute()}+':'+${operation.getOperationDateTime().getSecond()}"></h4>
+    <br>
+    <h4 th:text="'Main operation'"></h4>
+    <h4 th:text="${operation.getDeposit()} ? 'Deposit: '+${operation.getDeposit()} : 'Withdrawal : '+${operation.getWithdrawal()}"></h4>
 </body>
 </html>

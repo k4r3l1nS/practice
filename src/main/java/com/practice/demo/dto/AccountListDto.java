@@ -17,11 +17,17 @@ import java.util.List;
 @NoArgsConstructor
 public class AccountListDto {
 
-    private String fullName;
-
+    private CommonInfo commonInfo;
     private Page<AccountInfo> accounts;
 
-    private Long clientId;
+    @Getter
+    @Setter
+    @Builder
+    private final static class CommonInfo {
+
+        private String fullName;
+        private Long clientId;
+    }
 
     @Getter
     @Setter
@@ -46,12 +52,13 @@ public class AccountListDto {
         return accounts.isEmpty() || accounts.get().findFirst().get().accountId == null;
     }
 
-    public static AccountListDto valueFrom(Page<AccountView> accountViews, Long clientId, String fullName) {
+    public static AccountListDto valueFrom(Page<AccountView> accountViews, AccountView representativeView) {
 
         AccountListDto accountListDto = new AccountListDto();
 
-        accountListDto.setClientId(clientId);
-        accountListDto.setFullName(fullName);
+        accountListDto.setCommonInfo(CommonInfo.builder()
+                        .clientId(representativeView.getClientId()).fullName(representativeView.getFullName())
+                .build());
 
         Page<AccountInfo> accountInfoPage = accountViews.isEmpty() ? Page.empty() :
                 accountViews.map(accountView ->

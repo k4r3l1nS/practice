@@ -87,13 +87,13 @@ public class AccountService {
         //return AccountListDto.valueFrom(view);
     }
 
-    @Transactional(readOnly = true)
-    public OperationListDto findAllOperationsByAccountId(Long accountId) {
-
-        var operationViewList = operationRepository.findAllOperationsByAccountId(accountId);
-
-        return OperationListDto.valueFrom(operationViewList);
-    }
+//    @Transactional(readOnly = true)
+//    public OperationListDto findAllOperationsByAccountId(Long accountId) {
+//
+//        var operationViewList = operationRepository.findAllOperationsByAccountId(accountId);
+//
+//        return OperationListDto.valueFrom(operationRepository.findAllOperationsByAccountId(accountId));
+//    }
 
     public void deactivateAccountById(Long accountId) {
 
@@ -116,7 +116,7 @@ public class AccountService {
         return accountViewRepositoty.findAll(specification, pageRequest);
     }
 
-    public String getFullNameFromViewByClientId(Long clientId) {
+    public AccountView findOneAccountView(Long clientId) {
 
         var specification = new SpecificationBuilder<>()
                 .with(new Condition("clientId", Arrays.asList(clientId.toString()), Condition.OperationType.EQUALS,
@@ -127,6 +127,6 @@ public class AccountService {
 
         List<AccountView> accountView =  accountViewRepositoty.findAll(specification);
 
-        return accountView.get(0).getFullName();
+        return accountView.get(0);
     }
 }

@@ -40,16 +40,6 @@ public class ClientService {
         return clientRepository.findClientById(clientId);
     }
 
-//    public List<Client> findAll() {
-//
-//        Iterable<Client> clientIterable = clientRepository.findAll();
-//
-//        List<Client> clientList = new ArrayList<>();
-//        clientIterable.forEach(clientList::add);
-//
-//        return clientList;
-//    }
-
     public List<ClientView> findAllClients() {
 
         return clientRepository.getAllClients();
