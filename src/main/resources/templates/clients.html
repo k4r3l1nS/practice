@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<head>
+    <meta charset="UTF-8">
+    <title>Client base</title>
+</head>
+<body>
+    <header th:insert="blocks/header :: header"></header>
+    <h3>Click the following button to add new client:</h3>
+    <a th:href="'/clients'+'/add'">
+        <button class="btn btn-success"><h5>Add</h5></button>
+    </a>
+    <br>
+    <br>
+    <br>
+
+    <h4>
+            <form action="/clients" method="get" th:object="${PASdto}">
+                Sort by:&nbsp;
+                <span>
+                    <select th:field="*{sortBy}">
+                        <option value="lastName" th:selected="${PASdto.sortBy}=='lastName'">Name</option>
+                        <option value="numberOfAccounts" th:selected="${PASdto.sortBy}=='numberOfAccounts'">Number of accounts</option>
+                        <option value="registrationDate" th:selected="${PASdto.sortBy}=='registrationDate'">Registration date</option>
+                        <option value="birthDate" th:selected="${PASdto.sortBy}=='birthDate'">Birth date</option>
+                    </select>
+                </span>
+
+                &nbsp;Order:&nbsp;
+                <span>
+                    <select th:field="*{order}">
+                        <option value="ASC" th:selected="${PASdto.order}=='ASC'">Ascending ('A'-'Z')</option>
+                        <option value="DESC" th:selected="${PASdto.order}=='DESC'">Decreasing ('Z'-'A')</option>
+                    </select>
+                </span>
+
+                &ensp;Page size:
+                <span>
+                    <select th:field="*{size}">
+                        <option value="3" th:selected="${PASdto.size}==3">3</option>
+                        <option value="5" th:selected="${PASdto.size}==5">5</option>
+                        <option value="10" th:selected="${PASdto.size}==10">10</option>
+                        <option value="20" th:selected="${PASdto.size}==20">20</option>
+                        <option value="50" th:selected="${PASdto.size}==50">50</option>
+                    </select>
+                </span>
+                <br>
+                <br>
+                <input type="submit" value="Confirm">
+                <input type="reset" value="Reset">
+                <br>
+                <br>
+            </form>
+
+            <form action="/clients" method="get" th:object="${CSdto}">
+                <br>
+                Filter:
+                <br>
+
+                &ensp;First name&ensp;
+                <select th:field="*{firstNameOT}">
+                    <option value="=" selected="selected">=</option>
+                </select>
+                &ensp;
+                <input type="text" th:value="${CSdto.getFirstName() == null || CSdto.getFirstName().isEmpty()} ? '' : ${CSdto.getFirstName()}" placeholder="Enter first name" th:field="*{firstName}">
+                <br>
+
+                &ensp;Last name&ensp;
+                <select th:field="*{lastNameOT}">
+                    <option value="=">=</option>
+                </select>
+                &ensp;
+                <input type="text" th:value="${CSdto.getLastName() == null || CSdto.getLastName().isEmpty()} ? '' : ${CSdto.getLastName()}" placeholder="Enter last name" th:field="*{lastName}">
+                <br>
+
+                &ensp;Number of accounts&ensp;
+                <select th:field="*{numberOfAccountsOT}">
+                    <option value="=" th:selected="${CSdto.getNumberOfAccountsOT()}=='='">=</option>
+                    <option value="<" th:selected="${CSdto.getNumberOfAccountsOT()}=='<'"><</option>
+                    <option value=">" th:selected="${CSdto.getNumberOfAccountsOT()}=='>'">></option>
+                </select>
+                    &ensp;
+                <input type="number" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
+                <br>
+
+                &ensp;Registrarion date&ensp;
+                <select th:field="*{registrationDateOT}">
+                    <option value="=" th:selected="${CSdto.getRegistrationDateOT()}=='='">=</option>
+                    <option value="<" th:selected="${CSdto.getRegistrationDateOT()}=='<'">before</option>
+                    <option value=">" th:selected="${CSdto.getRegistrationDateOT()}=='>'">after</option>
+                </select>
+                &ensp;
+                <input type="datetime-local" th:value="${CSdto.getRegistrationDate() == null} ? '' : ${CSdto.getRegistrationDate()}" placeholder="Enter registration date" th:field="*{registrationDate}">
+                <br>
+
+                &ensp;Birth date&ensp;
+                <select th:field="*{birthDateOT}">
+                    <option value="=" th:selected="${CSdto.getBirthDateOT()}=='='">=</option>
+                    <option value="<" th:selected="${CSdto.getBirthDateOT()}=='<'">before</option>
+                    <option value=">" th:selected="${CSdto.getBirthDateOT()}=='>'">after</option>
+                </select>
+                &ensp;
+                <input type="date" th:value="${CSdto.getBirthDate() == null} ? '' : ${CSdto.getBirthDate()}" placeholder="Enter birth date" th:field="*{birthDate}">
+                <br>
+                <br>
+                <input type="submit" value="Confirm">
+                <input type="reset" value="Reset">
+            </form>
+    </h4>
+
+    <br>
+    <br>
+    <h3 th:text="${clients.isEmpty()} ? 'There are no clients!' : 'Clients list:'"></h3>
+    <br>
+
+    <span th:if="${clients.isEmpty()} == false">
+        <h4>
+            Pages:&ensp;
+                <span th:if="${PASdto.page}==0">
+                    <span th:text="${PASdto.page + 1}"></span>
+                    <span th:if="${PASdto.page + 1} < ${clients.getTotalPages()}">
+                        &nbsp;
+                        <a th:href="'/clients?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page + 2}"></a>
+                    </span>
+                    <span th:if="${PASdto.page + 1} < ${clients.getTotalPages() - 1}">
+                        <span th:if="${PASdto.page + 1}!=${clients.getTotalPages()-2}">&ensp;...</span>
+                        &nbsp;
+                        <a th:href="'/clients?page='+${clients.getTotalPages() - 1}+'&size='+${PASdto.size}" th:text="${clients.getTotalPages()}"></a>
+                    </span>
+                </span>
+                <span th:if="${PASdto.page}==${clients.getTotalPages()-1} and ${clients.getTotalPages()>1}">
+                    <span th:if="1 < ${clients.getTotalPages()}">
+                        <a th:href="'/clients?page=0&size='+${PASdto.size}">1</a>
+                        &nbsp;
+                    </span>
+                    <span th:if="2 < ${clients.getTotalPages()}">
+                        <span th:if="${clients.getTotalPages() != 3}">...&ensp;</span>
+                        <a th:href="'/clients?page='+${clients.getTotalPages() - 2}+'&size='+${PASdto.size}" th:text="${clients.getTotalPages() - 1}"></a>
+                        &nbsp;
+                    </span>
+                    <span th:text="${PASdto.page + 1}"></span>
+                </span>
+                <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${clients.getTotalPages() - 1})">
+                    <a th:href="'/clients?page=0&size='+${PASdto.size}" th:text="'1'"></a>
+                    &nbsp;
+                    <span th:if="${PASdto.page} > 2">...&ensp;</span>
+
+                    <span th:if="${PASdto.page} > 1">
+                        <a th:href="'/clients?page='+${PASdto.page - 1}+'&size='+${PASdto.size}" th:text="${PASdto.page}"></a>
+                        &nbsp;
+                    </span>
+                    <span th:text="${PASdto.page+1}"></span>
+                    &nbsp;
+                    <span th:if="${clients.getTotalPages()}-2 > ${PASdto.page}">
+                        <a th:href="'/clients?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page+2}"></a>
+                        &nbsp;
+                    </span>
+
+
+                    <span th:if="${PASdto.page} < ${clients.getTotalPages() - 3}">...&ensp;</span>
+                    <a th:href="'/clients?page='+${clients.getTotalPages()-1}+'&size='+${PASdto.size}" th:text="${clients.getTotalPages()}"></a>
+                </span>
+        </h4>
+    </span>
+
+    <br>
+    <div th:each="client : ${clients}">
+        <a th:href="'/clients/'+${client.id}">
+            <h4 th:text="${client.getFullName()}+' (id = '+${client.getId()}+')'"></h4>
+        </a>
+        <h5 th:text="'Number of accounts: '+${client.getNumberOfAccounts()}"></h5>
+        <h5 th:text="'Birth date: '+${client.getBirthDate().getDayOfMonth()}+' '+${client.getBirthDate().getMonth().toString()}+' '+${client.getBirthDate().getYear()}"></h5>
+        <h5 th:text="'Registration date: '+${client.getRegistrationDate().getDayOfMonth()}+' '+${client.getRegistrationDate().getMonth().toString()}+' '+${client.getRegistrationDate().getYear()}+' '+${client.getRegistrationDate().getHour()}+':'+${client.getRegistrationDate().getMinute()}+':'+${client.getRegistrationDate().getSecond()}"></h5>
+        <h5 th:text="${client.isActive()} ? 'Status: active' : 'Status: deactivated'"></h5>
+        <a th:href="'/clients/'+${client.getId()}+'/edit'">
+            <button type="button" class="btn btn-primary">Edit</button>
+        </a>
+        <span th:if="${client.isActive()}">
+<!--           <form th:method="PUT" th:action="'/clients'">-->
+<!--           <input name="_method" type="hidden" value="PUT" />-->
+            <a th:href="'/clients/'+${client.id}+'/deactivate'">
+                <button type="button" class="btn btn-danger">Deactivate</button>
+            </a>
+<!--            </form>-->
+        </span>
+        <span th:if="${!client.isActive()}">
+<!--            <form th:action="'/clients'" th:method="PUT">-->
+<!--            <input name="_method" type="hidden" value="PUT" />-->
+            <a th:href="'/clients/'+${client.id}+'/activate'">
+                <button type="button" class="btn btn-success">Activate</button>
+            </a>
+<!--                </form>-->
+        </span>
+        <br>
+        <br>
+    </div>
+
+</body>
+</html>

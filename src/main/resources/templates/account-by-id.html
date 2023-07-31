@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<head>
+  <meta charset="UTF-8">
+  <title>Account</title>
+</head>
+<body>
+  <header th:insert="blocks/header :: header"></header>
+  <h3 th:text="'Owner:'"></h3>
+  <a th:href="'/clients/'+${operation_list_dto.getOperations().get(0).clientId}">
+    <h4 th:text="${operation_list_dto.getOwnerFullName()}"></h4>
+  </a>
+  <br>
+
+  <h3 th:text="'Balance: '+${operation_list_dto.getBalance()}+' '+${operation_list_dto.getCurrency().toString()}"></h3>
+  <br>
+
+  <h3 th:text="'All operations related to ' + ${operation_list_dto.getAccountName()} + ':'"></h3>
+
+  <div th:each="operation : ${operation_list_dto.getOperations()}">
+    <a th:href="'/clients/'+${operation.getClientId()}+'/account-'+${operation.getAccountId()}+'/operation-'+${operation.getOperationId()}">
+      <h4 th:text="${operation.operationDateTime.getDayOfMonth()}+' '+${operation.operationDateTime.getMonth().toString()}+' '+${operation.operationDateTime.getYear()}+' '+${operation.operationDateTime.getHour()}+':'+${operation.operationDateTime.getMinute()}+':'+${operation.operationDateTime.getSecond()}"></h4>
+    </a>
+  </div>
+
+  <br>
+  <h3>You might perform operations by clicking link below:</h3>
+  <a th:href="'/clients/'+${operation_list_dto.operations.get(0).getClientId()}+'/account-'+${operation_list_dto.operations.get(0).getAccountId()}+'/new-operation'">
+    <h4 th:text="'Perform operation'"></h4>
+  </a>
+</body>
+</html>

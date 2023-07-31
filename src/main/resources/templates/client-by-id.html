@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<head>
+    <meta charset="UTF-8">
+    <title>Client</title>
+</head>
+<body>
+    <header th:insert="blocks/header :: header"></header>
+
+    <h3>Click the following button to add new account:</h3>
+    <a th:href="'/clients/'+${accountListDto.clientId}+'/new-account'">
+        <button class="btn btn-success"><h5>Add</h5></button>
+    </a>
+    <br>
+    <br>
+    <br>
+
+    <h4>
+        <form th:action="'/clients/'+${accountListDto.clientId}" method="get" th:object="${PASdto}">
+            Sort by:&nbsp;
+            <span>
+                    <select th:field="*{sortBy}">
+                        <option value="balance" th:selected="${PASdto.sortBy}=='balance'">Balance</option>
+                        <option value="numberOfOperations" th:selected="${PASdto.sortBy}=='numberOfOperations'">Number of operations</option>
+                        <option value="latestOperation" th:selected="${PASdto.sortBy}=='latestOperation'">Latest operation</option>
+                        <option value="accountName" th:selected="${PASdto.sortBy}=='accountName'">Account name</option>
+                    </select>
+                </span>
+
+            &nbsp;Order:&nbsp;
+            <span>
+                    <select th:field="*{order}">
+                        <option value="ASC" th:selected="${PASdto.order}=='ASC'">Ascending ('A'-'Z')</option>
+                        <option value="DESC" th:selected="${PASdto.order}=='DESC'">Decreasing ('Z'-'A')</option>
+                    </select>
+                </span>
+
+            &ensp;Page size:
+            <span>
+                    <select th:field="*{size}">
+                        <option value="3" th:selected="${PASdto.size}==3">3</option>
+                        <option value="5" th:selected="${PASdto.size}==5">5</option>
+                        <option value="10" th:selected="${PASdto.size}==10">10</option>
+                        <option value="20" th:selected="${PASdto.size}==20">20</option>
+                        <option value="50" th:selected="${PASdto.size}==50">50</option>
+                    </select>
+                </span>
+            <br>
+            <br>
+            <input type="submit" value="Confirm">
+            <input type="reset" value="Reset">
+            <br>
+            <br>
+        </form>
+
+        <form th:action="'/clients/'+${accountListDto.clientId}" method="get" th:object="${ASdto}">
+            <br>
+            Filter:
+            <br>
+
+            &ensp;Balance&ensp;
+            <select th:field="*{balanceOT}">
+                <option value="=" th:selected="${ASdto.balanceOT}=='='">=</option>
+                <option value="<" th:selected="${ASdto.balanceOT}=='<'"><</option>
+                <option value=">" th:selected="${ASdto.balanceOT}=='>'">></option>
+            </select>
+            &ensp;
+            <input type="number" th:value="${ASdto.balance == null} ? '' : ${ASdto.balance}" placeholder="Enter a sum" th:field="*{balance}">
+            <br>
+
+            &ensp;Currency&ensp;
+            <select th:field="*{currencyOT}">
+                <option value="=" selected="selected">=</option>
+            </select>
+            &ensp;
+            <select th:field="*{currency}">
+                <option th:value="null" selected="selected">All</option>
+                <span th:each="currency : ${currencies}">
+                    <option th:value="${currency}" th:text="${currency.name()}"></option>
+                </span>
+            </select>
+            <br>
+
+            &ensp;Account name&ensp;
+            <select th:field="*{accountNameOT}">
+                <option value="=" selected="selected">=</option>
+            </select>
+            &ensp;
+            <input type="text" th:value="${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : ${ASdto.accountName}" placeholder="Enter account name" th:field="*{accountName}">
+            <br>
+
+            &ensp;Number of operations&ensp;
+            <select th:field="*{numberOfOperationsOT}">
+                <option value="=" th:selected="${ASdto.numberOfOperationsOT}=='='">=</option>
+                <option value="<" th:selected="${ASdto.numberOfOperationsOT}=='<'">before</option>
+                <option value=">" th:selected="${ASdto.numberOfOperationsOT}=='>'">after</option>
+            </select>
+            &ensp;
+            <input type="number" th:value="${ASdto.numberOfOperations == null} ? '' : ${ASdto.numberOfOperations}" placeholder="Enter number of operations" th:field="*{numberOfOperations}">
+            <br>
+
+            &ensp;Latest operation&ensp;
+            <select th:field="*{latestOperationOT}">
+                <option value="=" th:selected="${ASdto.latestOperationOT}=='='">=</option>
+                <option value="<" th:selected="${ASdto.latestOperationOT}=='<'">before</option>
+                <option value=">" th:selected="${ASdto.latestOperationOT}=='>'">after</option>
+            </select>
+            &ensp;
+            <input type="datetime-local" th:value="${ASdto.latestOperation == null} ? '' : ${ASdto.latestOperation}" th:field="*{latestOperation}">
+            <br>
+
+            <br>
+            <input type="submit" value="Confirm">
+            <input type="reset" value="Reset">
+        </form>
+    </h4>
+    <br>
+
+    <br>
+    <h3 th:text="${accountListDto.isEmpty()} ? 'There are no accounts which belong to '+${accountListDto.getFullName()}+'!' : 'All accounts of '+${accountListDto.getFullName()}+':'"></h3>
+
+    <span th:if="${accountListDto.isEmpty()} == false">
+        <br>
+        <h4>
+        Pages:&ensp;
+                <span th:if="${PASdto.page}==0">
+                    <span th:text="${PASdto.page + 1}"></span>
+                    <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages()}">
+                        &nbsp;
+                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page + 2}"></a>
+                    </span>
+                    <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages() - 1}">
+                        <span th:if="${PASdto.page + 1}!=${accountListDto.accounts.getTotalPages()-2}">&ensp;...</span>
+                        &nbsp;
+                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 1}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages()}"></a>
+                    </span>
+                </span>
+                <span th:if="${PASdto.page}==${accountListDto.accounts.getTotalPages()-1} and ${accountListDto.accounts.getTotalPages()>1}">
+                    <span th:if="1 < ${accountListDto.accounts.getTotalPages()}">
+                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page=0&size='+${PASdto.size}">1</a>
+                        &nbsp;
+                    </span>
+                    <span th:if="2 < ${accountListDto.accounts.getTotalPages()}">
+                        <span th:if="${accountListDto.accounts.getTotalPages() != 3}">...&ensp;</span>
+                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 2}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages() - 1}"></a>
+                        &nbsp;
+                    </span>
+                    <span th:text="${PASdto.page + 1}"></span>
+                </span>
+                <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${accountListDto.accounts.getTotalPages() - 1})">
+                    <a th:href="'/clients/'+${accountListDto.clientId}+'?page=0&size='+${PASdto.size}" th:text="'1'"></a>
+                    &nbsp;
+                    <span th:if="${PASdto.page} > 2">...&ensp;</span>
+
+                    <span th:if="${PASdto.page} > 1">
+                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${PASdto.page - 1}+'&size='+${PASdto.size}" th:text="${PASdto.page}"></a>
+                        &nbsp;
+                    </span>
+                    <span th:text="${PASdto.page+1}"></span>
+                    &nbsp;
+                    <span th:if="${accountListDto.accounts.getTotalPages()}-2 > ${PASdto.page}">
+                        <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page+2}"></a>
+                        &nbsp;
+                    </span>
+
+
+                    <span th:if="${PASdto.page} < ${accountListDto.accounts.getTotalPages() - 3}">...&ensp;</span>
+                    <a th:href="'/clients/'+${accountListDto.clientId}+'?page='+${accountListDto.accounts.getTotalPages()-1}+'&size='+${PASdto.size}" th:text="${accountListDto.accounts.getTotalPages()}"></a>
+                </span>
+        </h4>
+        <br>
+
+
+        <div th:each="account : ${accountListDto.getAccounts()}">
+            <a th:href="'/clients/'+${accountListDto.clientId}+'/account-'+${account.getAccountId()}">
+                <h4 th:text="${account.getAccountName()}+' (id = '+${account.getAccountId()}+')'"></h4>
+            </a>
+            <h5 th:text="'Balance: '+${account.getBalance()}+' '+${account.getCurrency().toString()}"></h5>
+            <h5 th:text="'Latest operation: '+${account.getLatestOperation().getDayOfMonth()}+' '+${account.getLatestOperation().getMonth().toString()}+' '+${account.getLatestOperation().getYear()}+' '+${account.getLatestOperation().getHour()}+':'+${account.getLatestOperation().getMinute()}+':'+${account.getLatestOperation().getSecond()}"></h5>
+            <h5 th:text="'Number of operations: '+${account.numberOfOperations}"></h5>
+            <a th:href="'/clients/'+${accountListDto.clientId}+'/account-'+${account.accountId}+'/edit'">
+                <button type="button" class="btn btn-primary">Edit</button>
+            </a>
+            <a th:href="'/clients/'+${accountListDto.clientId}+'/account-'+${account.accountId}+'/deactivate'">
+                <button type="button" class="btn btn-danger">Deactivate</button>
+            </a>
+            <br>
+            <br>
+        </div>
+    </span>
+    <br>
+    <h3>Click the following link to add new account:</h3>
+    <a th:href="'/clients/'+${accountListDto.getClientId()}+'/new-account'">
+        <h4 th:text="'Add'"></h4>
+    </a>
+
+</body>
+</html>
