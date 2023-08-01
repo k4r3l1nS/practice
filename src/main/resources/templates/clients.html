@@ -45,63 +45,58 @@
                     </select>
                 </span>
                 <br>
-                <br>
-                <input type="submit" value="Confirm">
-                <input type="reset" value="Reset">
-                <br>
-                <br>
-            </form>
 
-            <form action="/clients" method="get" th:object="${CSdto}">
-                <br>
-                Filter:
-                <br>
+                <div th:object="${CSdto}">
+                    <br>
+                    Filter:
+                    <br>
 
-                &ensp;First name&ensp;
-                <select th:field="*{firstNameOT}">
-                    <option value="=" selected="selected">=</option>
-                </select>
-                &ensp;
-                <input type="text" th:value="${CSdto.getFirstName() == null || CSdto.getFirstName().isEmpty()} ? '' : ${CSdto.getFirstName()}" placeholder="Enter first name" th:field="*{firstName}">
-                <br>
-
-                &ensp;Last name&ensp;
-                <select th:field="*{lastNameOT}">
-                    <option value="=">=</option>
-                </select>
-                &ensp;
-                <input type="text" th:value="${CSdto.getLastName() == null || CSdto.getLastName().isEmpty()} ? '' : ${CSdto.getLastName()}" placeholder="Enter last name" th:field="*{lastName}">
-                <br>
-
-                &ensp;Number of accounts&ensp;
-                <select th:field="*{numberOfAccountsOT}">
-                    <option value="=" th:selected="${CSdto.getNumberOfAccountsOT()}=='='">=</option>
-                    <option value="<" th:selected="${CSdto.getNumberOfAccountsOT()}=='<'"><</option>
-                    <option value=">" th:selected="${CSdto.getNumberOfAccountsOT()}=='>'">></option>
-                </select>
+                    &ensp;First name&ensp;
+                    <select th:field="*{firstNameOT}">
+                        <option value="=" selected="selected">=</option>
+                    </select>
                     &ensp;
-                <input type="number" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
-                <br>
+                    <input type="text" th:value="${CSdto.getFirstName() == null || CSdto.getFirstName().isEmpty()} ? '' : ${CSdto.getFirstName()}" placeholder="Enter first name" th:field="*{firstName}">
+                    <br>
 
-                &ensp;Registrarion date&ensp;
-                <select th:field="*{registrationDateOT}">
-                    <option value="=" th:selected="${CSdto.getRegistrationDateOT()}=='='">=</option>
-                    <option value="<" th:selected="${CSdto.getRegistrationDateOT()}=='<'">before</option>
-                    <option value=">" th:selected="${CSdto.getRegistrationDateOT()}=='>'">after</option>
-                </select>
-                &ensp;
-                <input type="datetime-local" th:value="${CSdto.getRegistrationDate() == null} ? '' : ${CSdto.getRegistrationDate()}" placeholder="Enter registration date" th:field="*{registrationDate}">
-                <br>
+                    &ensp;Last name&ensp;
+                    <select th:field="*{lastNameOT}">
+                        <option value="=">=</option>
+                    </select>
+                    &ensp;
+                    <input type="text" th:value="${CSdto.getLastName() == null || CSdto.getLastName().isEmpty()} ? '' : ${CSdto.getLastName()}" placeholder="Enter last name" th:field="*{lastName}">
+                    <br>
 
-                &ensp;Birth date&ensp;
-                <select th:field="*{birthDateOT}">
-                    <option value="=" th:selected="${CSdto.getBirthDateOT()}=='='">=</option>
-                    <option value="<" th:selected="${CSdto.getBirthDateOT()}=='<'">before</option>
-                    <option value=">" th:selected="${CSdto.getBirthDateOT()}=='>'">after</option>
-                </select>
-                &ensp;
-                <input type="date" th:value="${CSdto.getBirthDate() == null} ? '' : ${CSdto.getBirthDate()}" placeholder="Enter birth date" th:field="*{birthDate}">
-                <br>
+                    &ensp;Number of accounts&ensp;
+                    <select th:field="*{numberOfAccountsOT}">
+                        <option value="=" th:selected="${CSdto.getNumberOfAccountsOT()}=='='">=</option>
+                        <option value="<" th:selected="${CSdto.getNumberOfAccountsOT()}=='<'"><</option>
+                        <option value=">" th:selected="${CSdto.getNumberOfAccountsOT()}=='>'">></option>
+                    </select>
+                        &ensp;
+                    <input type="number" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
+                    <br>
+
+                    &ensp;Registrarion date&ensp;
+                    <select th:field="*{registrationDateOT}">
+                        <option value="=" th:selected="${CSdto.getRegistrationDateOT()}=='='">=</option>
+                        <option value="<" th:selected="${CSdto.getRegistrationDateOT()}=='<'">before</option>
+                        <option value=">" th:selected="${CSdto.getRegistrationDateOT()}=='>'">after</option>
+                    </select>
+                    &ensp;
+                    <input type="datetime-local" th:value="${CSdto.getRegistrationDate() == null} ? '' : ${CSdto.getRegistrationDate()}" placeholder="Enter registration date" th:field="*{registrationDate}">
+                    <br>
+
+                    &ensp;Birth date&ensp;
+                    <select th:field="*{birthDateOT}">
+                        <option value="=" th:selected="${CSdto.getBirthDateOT()}=='='">=</option>
+                        <option value="<" th:selected="${CSdto.getBirthDateOT()}=='<'">before</option>
+                        <option value=">" th:selected="${CSdto.getBirthDateOT()}=='>'">after</option>
+                    </select>
+                    &ensp;
+                    <input type="date" th:value="${CSdto.getBirthDate() == null} ? '' : ${CSdto.getBirthDate()}" placeholder="Enter birth date" th:field="*{birthDate}">
+                    <br>
+                </div>
                 <br>
                 <input type="submit" value="Confirm">
                 <input type="reset" value="Reset">
@@ -120,45 +115,45 @@
                     <span th:text="${PASdto.page + 1}"></span>
                     <span th:if="${PASdto.page + 1} < ${clients.getTotalPages()}">
                         &nbsp;
-                        <a th:href="'/clients?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page + 2}"></a>
+                        <a th:href="'/clients?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="${PASdto.page + 2}"></a>
                     </span>
                     <span th:if="${PASdto.page + 1} < ${clients.getTotalPages() - 1}">
                         <span th:if="${PASdto.page + 1}!=${clients.getTotalPages()-2}">&ensp;...</span>
                         &nbsp;
-                        <a th:href="'/clients?page='+${clients.getTotalPages() - 1}+'&size='+${PASdto.size}" th:text="${clients.getTotalPages()}"></a>
+                        <a th:href="'/clients?page='+${clients.getTotalPages() - 1}+'&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="${clients.getTotalPages()}"></a>
                     </span>
                 </span>
                 <span th:if="${PASdto.page}==${clients.getTotalPages()-1} and ${clients.getTotalPages()>1}">
                     <span th:if="1 < ${clients.getTotalPages()}">
-                        <a th:href="'/clients?page=0&size='+${PASdto.size}">1</a>
+                        <a th:href="'/clients?page=0&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})">1</a>
                         &nbsp;
                     </span>
                     <span th:if="2 < ${clients.getTotalPages()}">
                         <span th:if="${clients.getTotalPages() != 3}">...&ensp;</span>
-                        <a th:href="'/clients?page='+${clients.getTotalPages() - 2}+'&size='+${PASdto.size}" th:text="${clients.getTotalPages() - 1}"></a>
+                        <a th:href="'/clients?page='+${clients.getTotalPages() - 2}+'&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="${clients.getTotalPages() - 1}"></a>
                         &nbsp;
                     </span>
                     <span th:text="${PASdto.page + 1}"></span>
                 </span>
                 <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${clients.getTotalPages() - 1})">
-                    <a th:href="'/clients?page=0&size='+${PASdto.size}" th:text="'1'"></a>
+                    <a th:href="'/clients?page=0&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="'1'"></a>
                     &nbsp;
                     <span th:if="${PASdto.page} > 2">...&ensp;</span>
 
                     <span th:if="${PASdto.page} > 1">
-                        <a th:href="'/clients?page='+${PASdto.page - 1}+'&size='+${PASdto.size}" th:text="${PASdto.page}"></a>
+                        <a th:href="'/clients?page='+${PASdto.page - 1}+'&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="${PASdto.page}"></a>
                         &nbsp;
                     </span>
                     <span th:text="${PASdto.page+1}"></span>
                     &nbsp;
                     <span th:if="${clients.getTotalPages()}-2 > ${PASdto.page}">
-                        <a th:href="'/clients?page='+${PASdto.page + 1}+'&size='+${PASdto.size}" th:text="${PASdto.page+2}"></a>
+                        <a th:href="'/clients?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="${PASdto.page+2}"></a>
                         &nbsp;
                     </span>
 
 
                     <span th:if="${PASdto.page} < ${clients.getTotalPages() - 3}">...&ensp;</span>
-                    <a th:href="'/clients?page='+${clients.getTotalPages()-1}+'&size='+${PASdto.size}" th:text="${clients.getTotalPages()}"></a>
+                    <a th:href="'/clients?page='+${clients.getTotalPages()-1}+'&size='+${PASdto.size}+(${PASdto.order} == null ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy} == null ? '' : '&sortBy='+${PASdto.sortBy})+(${CSdto.firstName == null || CSdto.firstName.isEmpty()} ? '' : '&firstName='+${CSdto.firstName})+(${CSdto.lastName == null || CSdto.lastName.isEmpty()} ? '' : '&lastName='+${CSdto.lastName})+(${CSdto.birthDate} == null ? '' : '&birthDate='+${CSdto.birthDate})+(${CSdto.numberOfAccounts} == null ? '' : '&numberOfAccounts='+${CSdto.numberOfAccounts})+(${CSdto.registrationDate} == null ? '' : '&'+'registrationDate='+${CSdto.registrationDate})+(${CSdto.firstNameOT} == null ? '' : '&firstNameOT='+${CSdto.firstNameOT})+(${CSdto.lastNameOT} == null ? '' : '&lastNameOT='+${CSdto.lastNameOT})+(${CSdto.birthDateOT} == null ? '' : '&birthDateOT='+${CSdto.birthDateOT})+(${CSdto.numberOfAccountsOT} == null ? '' : '&numberOfAccountsOT='+${CSdto.numberOfAccountsOT})+(${CSdto.registrationDateOT} == null ? '' : '&'+'registrationDateOT='+${CSdto.registrationDateOT})" th:text="${clients.getTotalPages()}"></a>
                 </span>
         </h4>
     </span>
