@@ -1,9 +1,7 @@
 package com.practice.demo.service;
 
 import com.practice.demo.dto.AccountDto;
-import com.practice.demo.dto.AccountListDto;
 import com.practice.demo.dto.specification.models.AccountSpecificationDto;
-import com.practice.demo.dto.OperationListDto;
 import com.practice.demo.dto.paging_and_sotring.PagingAndSortingDto;
 import com.practice.demo.exceptions.model.AccountNameAlreadyTakenException;
 import com.practice.demo.exceptions.model.InvalidSumInputException;
@@ -23,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-
 
 @Service
 @Transactional

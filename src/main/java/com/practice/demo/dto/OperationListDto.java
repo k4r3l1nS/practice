@@ -3,14 +3,10 @@ package com.practice.demo.dto;
 import com.practice.demo.models.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.rates.Currency;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter

@@ -7,7 +7,6 @@ import com.practice.demo.dto.specification.models.AccountSpecificationDto;
 import com.practice.demo.dto.specification.models.ClientSpecificationDto;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.rates.Currency;
-import com.practice.demo.models.rates.CurrencyRates;
 import com.practice.demo.service.AccountService;
 import com.practice.demo.service.ClientService;
 import lombok.RequiredArgsConstructor;

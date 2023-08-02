@@ -2,7 +2,6 @@ package com.practice.demo.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

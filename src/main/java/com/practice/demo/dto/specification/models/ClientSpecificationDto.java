@@ -1,16 +1,10 @@
 package com.practice.demo.dto.specification.models;
 
 import com.practice.demo.dto.specification.SpecificationDto;
-import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.specification.Condition;
-import com.practice.demo.repos.ClientRepository;
-import com.practice.demo.repos.db_view_repos.ClientViewRepository;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

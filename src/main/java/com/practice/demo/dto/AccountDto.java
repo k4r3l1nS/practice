@@ -1,8 +1,6 @@
 package com.practice.demo.dto;
 
 import com.practice.demo.models.Account;
-import com.practice.demo.models.Operation;
-import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.rates.Currency;
 import com.practice.demo.models.rates.CurrencyRates;
 import lombok.Builder;

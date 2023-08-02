@@ -1,6 +1,5 @@
 package com.practice.demo.dto.paging_and_sotring;
 
-import com.practice.demo.models.rates.Currency;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

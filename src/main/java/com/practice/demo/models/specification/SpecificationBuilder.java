@@ -1,6 +1,5 @@
 package com.practice.demo.models.specification;
 
-import com.practice.demo.models.db_views.ClientView;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;

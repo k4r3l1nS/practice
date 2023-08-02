@@ -4,9 +4,6 @@ import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 @AllArgsConstructor
 public class SpecificationImpl<T> implements Specification<T> {
 

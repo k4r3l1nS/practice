@@ -4,13 +4,8 @@ import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.rates.Currency;
 import lombok.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter

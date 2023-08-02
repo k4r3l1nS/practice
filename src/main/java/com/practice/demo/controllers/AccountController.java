@@ -2,18 +2,12 @@ package com.practice.demo.controllers;
 
 import com.practice.demo.dto.AccountDto;
 import com.practice.demo.dto.OperationListDto;
-import com.practice.demo.dto.paging_and_sotring.ClientPagingAndSortingDto;
 import com.practice.demo.dto.paging_and_sotring.OperationPagingAndSortingDto;
-import com.practice.demo.dto.specification.models.ClientSpecificationDto;
 import com.practice.demo.dto.specification.models.OperationSpecificationDto;
 import com.practice.demo.models.Operation;
-import com.practice.demo.models.db_views.AccountView;
-import com.practice.demo.models.db_views.ClientView;
-import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.rates.Currency;
 import com.practice.demo.models.rates.CurrencyRates;
 import com.practice.demo.service.AccountService;
-import com.practice.demo.service.ClientService;
 import com.practice.demo.service.OperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
