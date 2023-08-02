@@ -47,7 +47,7 @@ public class AccountController {
 
         model.addAttribute("operationListDto", operationListDto);
 
-        model.addAttribute("operationKinds", OperationSpecificationDto.OperationKind.values());
+        model.addAttribute("operationKinds", Operation.OperationKind.values());
         model.addAttribute("currencies", Currency.values());
 
         return "account-by-id";

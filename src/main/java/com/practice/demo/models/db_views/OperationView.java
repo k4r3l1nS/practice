@@ -1,5 +1,6 @@
 package com.practice.demo.models.db_views;
 
+import com.practice.demo.models.Operation;
 import com.practice.demo.models.rates.Currency;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,20 +25,23 @@ public class OperationView {
     @Column(name = "client_id")
     private Long clientId;
 
-    @Column(name = "currency")
-    private Currency currency;
-
     @Column(name = "owner_full_name")
     private String ownerFullName;
 
     @Column(name = "balance")
     private double balance;
 
-    @Column(name = "deposit")
-    private Double deposit;
+    @Column(name = "account_currency")
+    private Currency accountCurrency;
 
-    @Column(name = "withdrawal")
-    private Double withdrawal;
+    @Column(name = "operation_kind")
+    private Operation.OperationKind operationKind;
+
+    @Column(name = "transaction_sum")
+    private Double transactionSum;
+
+    @Column(name = "currency_from")
+    private Currency currencyFrom;
 
     @Column(name = "operation_date")
     private LocalDateTime operationDateTime;

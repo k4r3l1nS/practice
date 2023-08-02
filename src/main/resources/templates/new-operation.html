@@ -12,17 +12,17 @@
     <form th:action="'/clients/'+${client_id}+'/account-'+${account_id}+'/new-operation'" method="post" th:object="${operationDto}">
       <br>
       <h4>1. Operation type</h4>
-      <input type="radio" id="deposit" th:field="*{operationType}" value="Deposit" th:checked="true">
+      <input type="radio" id="deposit" th:field="*{operationKind}" th:value="${operationKinds[0]}" th:checked="true">
       <label for="deposit">Deposit</label><br>
-      <input type="radio" id="withdrawal" th:field="*{operationType}" value="Withdrawal">
+      <input type="radio" id="withdrawal" th:field="*{operationKind}" th:value="${operationKinds[1]}">
       <label for="withdrawal">Withdrawal</label><br>
       <br>
       <h4>2. Sum</h4>
-      <input type="number" th:field="*{sum}" placeholder="Enter an amount of money" class="form-control">
+      <input type="number" th:field="*{transactionSum}" placeholder="Enter an amount of money" class="form-control">
       <br>
       <h4>3. Currency:</h4>
       <div th:each="currency : ${currencies}">
-        <input type="radio" th:id="${currency.getName()}" th:field="*{currencyFrom}" th:value="${currency.getName()}" th:checked="${currency.equals(currencies[0]) ? true : false}">
+        <input type="radio" th:id="${currency}" th:field="*{currencyFrom}" th:value="${currency}" th:checked="${currency.equals(currencies[0]) ? true : false}">
         <label th:for="${currency.getName()}" th:text="${currency.getName()}"></label><br>
       </div>
       <br>

@@ -8,6 +8,7 @@ import com.practice.demo.dto.paging_and_sotring.PagingAndSortingDto;
 import com.practice.demo.exceptions.model.AccountNameAlreadyTakenException;
 import com.practice.demo.exceptions.model.InvalidSumInputException;
 import com.practice.demo.models.Account;
+import com.practice.demo.models.Operation;
 import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.specification.Condition;
 import com.practice.demo.models.specification.SpecificationBuilder;
@@ -36,7 +37,8 @@ public class AccountService {
 
     private final AccountViewRepositoty accountViewRepositoty;
 
-    public void addAccount(AccountDto accountDto, Long clientId) throws InvalidSumInputException {
+    public void addAccount(AccountDto accountDto, Long clientId)
+            throws AccountNameAlreadyTakenException, InvalidSumInputException {
 
         if (accountRepository.findAccountByName(accountDto.getAccountName()) != null
                 && accountRepository.findAccountByName(accountDto.getAccountName()).isActive()) {
@@ -44,16 +46,16 @@ public class AccountService {
             throw new AccountNameAlreadyTakenException("This account name is already taken");
         }
 
-        if (accountDto.getSum() == null || accountDto.getSum() <= 0) {
+        if (accountDto.getFirstDeposit() == null || accountDto.getFirstDeposit() <= 0) {
 
             throw new InvalidSumInputException("First deposit is mandatory and must be above 0");
         }
 
         var client = clientRepository.findById(clientId).orElseThrow();
-
         var account = accountDto.toEntity();
 
-        account.deposit(accountDto.getSum());
+        account.addOperation(Operation.getOperation(Operation.OperationKind.DEPOSIT,
+                accountDto.getFirstDeposit(), account.getCurrency()));
 
         client.addAccount(account);
 
@@ -84,16 +86,7 @@ public class AccountService {
         var view = accountRepository.findAccountById(accountId);
 
         return view;
-        //return AccountListDto.valueFrom(view);
     }
-
-//    @Transactional(readOnly = true)
-//    public OperationListDto findAllOperationsByAccountId(Long accountId) {
-//
-//        var operationViewList = operationRepository.findAllOperationsByAccountId(accountId);
-//
-//        return OperationListDto.valueFrom(operationRepository.findAllOperationsByAccountId(accountId));
-//    }
 
     public void deactivateAccountById(Long accountId) {
 

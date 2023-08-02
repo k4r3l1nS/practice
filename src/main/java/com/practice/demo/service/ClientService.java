@@ -4,6 +4,7 @@ import com.practice.demo.dto.ClientDto;
 import com.practice.demo.dto.specification.models.ClientSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring.ClientPagingAndSortingDto;
 import com.practice.demo.exceptions.model.ClientAlreadyExistsException;
+import com.practice.demo.exceptions.model.EmptyFieldException;
 import com.practice.demo.models.Client;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.specification.SpecificationBuilder;
@@ -68,7 +69,7 @@ public class ClientService {
         return clientViewRepository.findAll(specification, pageRequest);
     }
 
-    public void addClient(ClientDto clientDto) {
+    public void addClient(ClientDto clientDto) throws ClientAlreadyExistsException, EmptyFieldException {
 
         Objects.requireNonNull(clientDto);
 
@@ -76,6 +77,13 @@ public class ClientService {
                 clientDto.getLastName(), clientDto.getBirthDate()) != null) {
 
             throw new ClientAlreadyExistsException("Client with these data already exists");
+        }
+
+        if (clientDto.getFirstName() == null || clientDto.getFirstName().isEmpty() || clientDto.getLastName() == null ||
+                clientDto.getLastName().isEmpty() || clientDto.getEmail() == null || clientDto.getEmail().isEmpty() ||
+                clientDto.getBirthDate() == null) {
+
+            throw new EmptyFieldException("All fields must be filled in");
         }
 
         var client = clientDto.toEntity();

@@ -15,11 +15,11 @@
     <input type="text" th:field="*{accountName}" placeholder="Enter an account name" class="form-control">
     <br>
     <h4>2. First deposit</h4>
-    <input type="number" th:field="*{sum}" placeholder="Enter your first deposit" class="form-control">
+    <input type="number" th:field="*{firstDeposit}" placeholder="Enter your first deposit" class="form-control">
     <br>
     <h4>3. Currency:</h4>
     <div th:each="currency : ${currencies}">
-      <input type="radio" th:id="${currency.getName()}" th:field="*{currency}" th:value="${currency.getName()}" th:checked="${currency.equals(currencies[0]) ? true : false}">
+      <input type="radio" th:id="${currency}" th:field="*{currency}" th:value="${currency}" th:checked="${currency.equals(currencies[0]) ? true : false}">
       <label th:for="${currency.getName()}" th:text="${currency.getName()}"></label><br>
     </div>
     <br>

@@ -1,5 +1,6 @@
 package com.practice.demo.dto;
 
+import com.practice.demo.models.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.rates.Currency;
 import jakarta.persistence.Column;
@@ -40,9 +41,11 @@ public class OperationListDto {
 
         private Long operationId;
 
-        private Double deposit;
+        private Operation.OperationKind operationKind;
 
-        private Double withdrawal;
+        private Double transactionSum;
+
+        private Currency currencyFrom;
 
         private LocalDateTime operationDateTime;
     }
@@ -59,14 +62,14 @@ public class OperationListDto {
         operationListDto.setCommonInfo(CommonInfo.builder()
                         .accountId(representativeView.getAccountId()).accountName(representativeView.getAccountName())
                         .balance(representativeView.getBalance()).clientId(representativeView.getClientId())
-                        .currency(representativeView.getCurrency()).ownerFullName(representativeView.getOwnerFullName())
+                        .currency(representativeView.getAccountCurrency()).ownerFullName(representativeView.getOwnerFullName())
                 .build());
 
         Page<OperationInfo> operationInfoPage = operationViews.isEmpty() ? Page.empty() :
                 operationViews.map(operationView ->
                         OperationInfo.builder()
-                                .operationId(operationView.getOperationId()).deposit(operationView.getDeposit())
-                                .withdrawal(operationView.getWithdrawal())
+                                .operationId(operationView.getOperationId()).operationKind(operationView.getOperationKind())
+                                .transactionSum(operationView.getTransactionSum()).currencyFrom(operationView.getCurrencyFrom())
                                 .operationDateTime(operationView.getOperationDateTime())
                                 .build());
 

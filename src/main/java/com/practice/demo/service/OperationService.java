@@ -1,28 +1,22 @@
 package com.practice.demo.service;
 
 import com.practice.demo.dto.OperationDto;
-import com.practice.demo.dto.OperationListDto;
 import com.practice.demo.dto.paging_and_sotring.PagingAndSortingDto;
-import com.practice.demo.dto.specification.models.AccountSpecificationDto;
 import com.practice.demo.dto.specification.models.OperationSpecificationDto;
-import com.practice.demo.exceptions.model.EmptyRadioValueException;
+import com.practice.demo.exceptions.model.EmptyFieldException;
 import com.practice.demo.exceptions.model.InvalidSumInputException;
 import com.practice.demo.models.Operation;
-import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.specification.Condition;
 import com.practice.demo.models.specification.SpecificationBuilder;
 import com.practice.demo.repos.AccountRepository;
-import com.practice.demo.repos.ClientRepository;
 import com.practice.demo.repos.OperationRepository;
 import com.practice.demo.repos.db_view_repos.OperationViewRepository;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.tree.pattern.ParseTreePattern;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,23 +30,22 @@ public class OperationService {
     private final OperationViewRepository operationViewRepository;
 
     public void addOperation(OperationDto operationDto, Long accountId)
-            throws InvalidSumInputException, EmptyRadioValueException {
+            throws InvalidSumInputException, EmptyFieldException {
 
-        if (operationDto.getOperationType() == null || operationDto.getCurrencyFrom() == null) {
+        if (operationDto.getOperationKind() == null || operationDto.getCurrencyFrom() == null
+                || operationDto.getTransactionSum() == null) {
 
-            throw new EmptyRadioValueException("All fields and radio buttons must be filled in");
+            throw new EmptyFieldException("All fields and radio buttons must be filled in");
         }
 
-        if (operationDto.getSum() == null || operationDto.getSum() <= 0) {
+        if (operationDto.getTransactionSum() <= 0) {
 
-            throw new InvalidSumInputException("Sum must be entered and be above 0");
+            throw new InvalidSumInputException("Transaction sum must be above 0");
         }
 
         var account = accountRepository.findById(accountId).orElseThrow();
 
-        var currencyTo = account.getCurrency();
-
-        var operation = operationDto.toEntity(currencyTo);
+        var operation = operationDto.toEntity();
         operationRepository.save(operation);
 
         account.addOperation(operation);

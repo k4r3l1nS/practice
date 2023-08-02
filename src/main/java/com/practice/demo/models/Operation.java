@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -23,11 +26,12 @@ public class Operation {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Column(name = "deposit")
-    private Double deposit;
+    @Column(name = "operation_kind")
+    @Enumerated
+    private OperationKind operationKind;
 
-    @Column(name = "withdrawal")
-    private Double withdrawal;
+    @Column(name = "transaction_sum")
+    private Double transactionSum;
 
     @Column(name = "operation_date")
     private LocalDateTime operationDateTime;
@@ -41,48 +45,39 @@ public class Operation {
         this.operationDateTime = LocalDateTime.now();
     }
 
-    public Operation(boolean isDeposit, Double sum) {
-        this();
+    public static Operation getOperation(OperationKind operationKind, Double transactionSum, Currency currencyFrom) {
 
-        if (isDeposit) {
+        Operation operation = new Operation();
 
-            this.deposit = sum;
-        }
-        else {
+        operation.setOperationKind(operationKind);
+        operation.setTransactionSum(transactionSum);
+        operation.setCurrencyFrom(currencyFrom);
 
-            this.withdrawal = sum;
-        }
-    }
-    public static Operation getDeposit(Double sum) {
-
-        return OperationKind.DEPOSIT.apply(sum);
+        return operation;
     }
 
-    public static Operation getWithdrawal(Double sum) {
-        return OperationKind.WITHDRAW.apply(sum);
-    }
+    @Getter
+    public enum OperationKind {
 
-    public boolean isWithdrawal() {
-        return withdrawal != null;
-    }
+        DEPOSIT("DEPOSIT"),
+        WITHDRAWAL("WITHDRAWAL");
 
-    public boolean isDeposit() {
-        return deposit != null;
-    }
+        private final static Map<String, OperationKind> _map;
 
-    public enum OperationKind implements Function<Double, Operation> {
-        DEPOSIT((sum) -> new Operation(true, sum)),
-        WITHDRAW((sum) -> new Operation(false, sum));
+        static {
 
-        OperationKind(Function<Double, Operation> resolveOperation) {
-            this.resolveOperation = resolveOperation;
+            _map = Stream.of(values()).collect(Collectors.toMap(OperationKind::getName, Function.identity()));
         }
 
-        private final Function<Double, Operation> resolveOperation;
+        private final String name;
 
-        @Override
-        public Operation apply(Double sum) {
-            return resolveOperation.apply(sum);
+        OperationKind(String name) {
+            this.name = name;
+        }
+
+        public static OperationKind resolveByName(String name) {
+
+            return _map.getOrDefault(name, null);
         }
     }
 }

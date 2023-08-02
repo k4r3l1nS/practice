@@ -2,6 +2,7 @@ package com.practice.demo.models;
 
 import com.practice.demo.exceptions.model.NotEnoughMoneyException;
 import com.practice.demo.models.rates.Currency;
+import com.practice.demo.models.rates.CurrencyRates;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,33 +45,30 @@ public class Account {
     @Column(name = "is_active")
     private boolean isActive = true;
 
-    public void deposit(Double sum) {
-
-        addOperation(Operation.getDeposit(sum));
-    }
-
-    public void withdraw(Double sum) {
-
-        addOperation(Operation.getWithdrawal(sum));
-    }
-
-    public void addOperation(Operation operation) {
-
-        if (operation.isDeposit()) {
-
-            balance += operation.getDeposit();
-        }
-        else {
-
-            if (balance < operation.getWithdrawal()) {
-
-                throw new NotEnoughMoneyException("There is not enough money on balance");
-            }
-
-            balance -= operation.getWithdrawal();
-        }
+    public void addOperation(Operation operation) throws NotEnoughMoneyException {
 
         Objects.requireNonNull(operation);
+
+        switch (operation.getOperationKind()) {
+
+            case DEPOSIT -> balance += new CurrencyRates().convert(
+                    operation.getCurrencyFrom(), currency, operation.getTransactionSum());
+
+            case WITHDRAWAL -> {
+
+                double withdrawalSum = new CurrencyRates().convert(
+                        operation.getCurrencyFrom(), currency, operation.getTransactionSum());
+
+                if (balance < withdrawalSum) {
+
+                    throw new NotEnoughMoneyException("There is not enough money on balance");
+                }
+
+                balance -= new CurrencyRates().convert(
+                        operation.getCurrencyFrom(), currency, operation.getTransactionSum());
+            }
+        }
+
         this.actions.add(operation);
         operation.setAccount(this);
     }

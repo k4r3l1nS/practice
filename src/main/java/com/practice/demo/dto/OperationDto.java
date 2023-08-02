@@ -2,7 +2,6 @@ package com.practice.demo.dto;
 
 import com.practice.demo.models.Operation;
 import com.practice.demo.models.rates.Currency;
-import com.practice.demo.models.rates.CurrencyRates;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,21 +11,20 @@ import lombok.Setter;
 @Builder
 public class OperationDto {
 
-    private String operationType;
+    private Operation.OperationKind operationKind;
 
-    private Double sum;
+    private Double transactionSum;
 
-    private String currencyFrom;
+    private Currency currencyFrom;
 
-    public Operation toEntity(Currency currencyTo) {
+    public Operation toEntity() {
 
-        double entityCurrencySum = new CurrencyRates().convert(Currency.resolveByName(currencyFrom), currencyTo, sum);
+        Operation operation = new Operation();
 
-        if (operationType.equals("Deposit")) {
+        operation.setTransactionSum(transactionSum);
+        operation.setCurrencyFrom(currencyFrom);
+        operation.setOperationKind(operationKind);
 
-            return Operation.getDeposit(entityCurrencySum);
-        }
-
-        return Operation.getWithdrawal(entityCurrencySum);
+        return operation;
     }
 }

@@ -17,7 +17,7 @@
     <input type="text" th:placeholder="${client.getLastName()}" th:field="*{lastName}" class="form-control">
     <br>
     <h4>2. Birth date:</h4>
-    <input type="text" th:placeholder="${client.getBirthDate()}" th:field="*{birthDate}" class="form-control">
+    <input type="text" th:placeholder="${client.birthDate.getMonthValue()}+' / '+${client.birthDate.getDayOfMonth()}+' / '+${client.birthDate.getYear()}" onfocus="(this.type='date')" th:field="*{birthDate}" class="form-control">
     <br>
     <h4>3. E-mail:</h4>
     <input type="email" th:placeholder="${client.getEmail()}" th:field="*{email}" class="form-control">

@@ -42,6 +42,7 @@ public class OperationController {
         model.addAttribute("client_id", clientId);
         model.addAttribute("account_id", accountId);
         model.addAttribute("currencies", Currency.values());
+        model.addAttribute("operationKinds", Operation.OperationKind.values());
         model.addAttribute("operationDto", OperationDto.builder().build());
 
         return "new-operation";

@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorInformation> catchEmptyRadioValueException(EmptyRadioValueException ex) {
+    public ResponseEntity<ErrorInformation> catchEmptyRadioValueException(EmptyFieldException ex) {
 
         return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
