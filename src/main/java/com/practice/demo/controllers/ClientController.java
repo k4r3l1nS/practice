@@ -24,16 +24,16 @@ public class ClientController {
     private final AccountService accountService;
 
     @GetMapping("/clients")
-    public String clients(@ModelAttribute ClientPagingAndSortingDto pagingAndSortingDto,
+    public String clients(@ModelAttribute ClientPagingAndSortingDto clientPagingAndSortingDto,
                           @ModelAttribute ClientSpecificationDto clientSpecificationDto, Model model) {
 
-        pagingAndSortingDto.fillEmptyFields();
+        clientPagingAndSortingDto.fillEmptyFields();
         clientSpecificationDto.fillEmptyFields();
 
-        model.addAttribute("PASdto", pagingAndSortingDto);
+        model.addAttribute("PASdto", clientPagingAndSortingDto);
         model.addAttribute("CSdto", clientSpecificationDto);
 
-        Page<ClientView> clients = clientService.fetchNextPage(pagingAndSortingDto, clientSpecificationDto);
+        Page<ClientView> clients = clientService.fetchNextPage(clientPagingAndSortingDto, clientSpecificationDto);
 
         model.addAttribute("clients", clients);
 

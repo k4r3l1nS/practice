@@ -60,7 +60,7 @@ public class AccountSpecificationDto implements SpecificationDto {
 
         if (balance != null) {
 
-            conditions.add(new Condition("balance", Arrays.asList(balance.toString()),
+            conditions.add(new Condition("balance", Arrays.asList(balance),
                     Condition.OperationType.resolveByName(balanceOT),
                     Condition.LogicalOperatorType.AND));
         }

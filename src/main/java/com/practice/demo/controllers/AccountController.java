@@ -6,6 +6,7 @@ import com.practice.demo.dto.paging_and_sotring.ClientPagingAndSortingDto;
 import com.practice.demo.dto.paging_and_sotring.OperationPagingAndSortingDto;
 import com.practice.demo.dto.specification.models.ClientSpecificationDto;
 import com.practice.demo.dto.specification.models.OperationSpecificationDto;
+import com.practice.demo.models.Operation;
 import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.db_views.OperationView;
@@ -45,6 +46,9 @@ public class AccountController {
                 operationService.findOneOperationView(accountId));
 
         model.addAttribute("operationListDto", operationListDto);
+
+        model.addAttribute("operationKinds", OperationSpecificationDto.OperationKind.values());
+        model.addAttribute("currencies", Currency.values());
 
         return "account-by-id";
     }

@@ -7,27 +7,177 @@
 </head>
 <body>
   <header th:insert="blocks/header :: header"></header>
-  <h3 th:text="'Owner:'"></h3>
-  <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}">
-    <h4 th:text="${operationListDto.commonInfo.ownerFullName}"></h4>
+
+  <h3>Click the following button to add new operation:</h3>
+  <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'/new-operation'">
+    <button class="btn btn-success"><h5>Add</h5></button>
   </a>
   <br>
-
-  <h3 th:text="'Balance: '+${operationListDto.commonInfo.balance}+' '+${operationListDto.commonInfo.currency.toString()}"></h3>
+  <br>
   <br>
 
+<!--  <h3 th:text="'Owner:'"></h3>-->
+<!--  <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}">-->
+<!--    <h4 th:text="${operationListDto.commonInfo.ownerFullName}"></h4>-->
+<!--  </a>-->
+<!--  <br>-->
+
+<!--  <h3 th:text="'Balance: '+${operationListDto.commonInfo.balance}+' '+${operationListDto.commonInfo.currency.toString()}"></h3>-->
+<!--  <br>-->
+  <h4>
+    <form th:action="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}" method="get" th:object="${PASdto}">
+      Sort by:&nbsp;
+      <span>
+                    <select th:field="*{sortBy}">
+                        <option value="operationDateTime" th:selected="${PASdto.sortBy}=='operationDateTime'">Operation date & time</option>
+                        <option value="operationKind" th:selected="${PASdto.sortBy}=='operationKind'">Operation kind</option>
+                        <option value="sum" th:selected="${PASdto.sortBy}=='sum'">Transaction sum</option>
+                    </select>
+                </span>
+
+      &nbsp;Order:&nbsp;
+      <span>
+                    <select th:field="*{order}">
+                        <option value="ASC" th:selected="${PASdto.order}=='ASC'">Ascending ('A'-'Z')</option>
+                        <option value="DESC" th:selected="${PASdto.order}=='DESC'">Decreasing ('Z'-'A')</option>
+                    </select>
+                </span>
+
+      &ensp;Page size:
+      <span>
+                    <select th:field="*{size}">
+                        <option value="3" th:selected="${PASdto.size}==3">3</option>
+                        <option value="5" th:selected="${PASdto.size}==5">5</option>
+                        <option value="10" th:selected="${PASdto.size}==10">10</option>
+                        <option value="20" th:selected="${PASdto.size}==20">20</option>
+                        <option value="50" th:selected="${PASdto.size}==50">50</option>
+                    </select>
+                </span>
+      <br>
+
+      <div th:object="${OSdto}">
+        <br>
+        Filter:
+        <br>
+
+        &ensp;Operation date & time&ensp;
+        <select th:field="*{operationDateTimeOT}">
+          <option value="=" th:selected="${OSdto.operationDateTimeOT}=='='">=</option>
+          <option value="<" th:selected="${OSdto.operationDateTimeOT}=='<'">before</option>
+          <option value=">" th:selected="${OSdto.operationDateTimeOT}=='>'">after</option>
+        </select>
+        &ensp;
+        <input type="datetime-local" th:value="${OSdto.operationDateTime == null} ? '' : ${OSdto.operationDateTime}" th:field="*{operationDateTime}">
+        <br>
+
+        &ensp;Transaction sum&ensp;
+        <select th:field="*{sumOT}">
+          <option value="=" th:selected="${OSdto.sumOT}=='='">=</option>
+          <option value="<" th:selected="${OSdto.sumOT}=='<'"><</option>
+          <option value=">" th:selected="${OSdto.sumOT}=='>'">></option>
+        </select>
+        &ensp;
+        <input type="number" th:value="${OSdto.sum == null} ? '' : ${OSdto.sum}" placeholder="Enter a transaction sum" th:field="*{sum}">
+        <br>
+
+        &ensp;Operation kind&ensp;
+        <select th:field="*{operationKind}">
+          <option value="=" selected="selected">=</option>
+        </select>
+        &ensp;
+        <select th:field="*{operationKind}">
+          <option th:value="null" selected="selected">All</option>
+          <span th:each="opKind : ${operationKinds}">
+              <option th:value="${opKind}" th:text="${opKind.name()}"></option>
+          </span>
+        </select>
+        <br>
+
+        &ensp;Currency from&ensp;
+        <select th:field="*{currencyFromOT}">
+          <option value="=" selected="selected">=</option>
+        </select>
+        &ensp;
+        <select th:field="*{currencyFrom}">
+          <option th:value="null" selected="selected">All</option>
+          <span th:each="currency : ${currencies}">
+              <option th:value="${currency}" th:text="${currency.name()}"></option>
+          </span>
+        </select>
+        <br>
+
+        <br>
+      </div>
+
+      <input type="submit" value="Confirm">
+      <input type="reset" value="Reset">
+    </form>
+  </h4>
+  <br>
+
+  <br>
   <h3 th:text="'All operations related to ' + ${operationListDto.commonInfo.accountName} + ':'"></h3>
 
-  <div th:each="operation : ${operationListDto.operations}">
-    <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'/operation-'+${operation.operationId}">
-      <h4 th:text="${operation.operationDateTime.getDayOfMonth()}+' '+${operation.operationDateTime.getMonth().toString()}+' '+${operation.operationDateTime.getYear()}+' '+${operation.operationDateTime.getHour()}+':'+${operation.operationDateTime.getMinute()}+':'+${operation.operationDateTime.getSecond()}"></h4>
-    </a>
-  </div>
+  <span th:if="${operationListDto.isEmpty()} == false">
+        <br>
+        <h4>
+        Pages:&ensp;
+                <span th:if="${PASdto.page}==0">
+                    <span th:text="${PASdto.page + 1}"></span>
+                    <span th:if="${PASdto.page + 1} < ${operationListDto.operations.getTotalPages()}">
+                        &nbsp;
+                        <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="${PASdto.page + 2}"></a>
+                    </span>
+                    <span th:if="${PASdto.page + 1} < ${operationListDto.operations.getTotalPages() - 1}">
+                        <span th:if="${PASdto.page + 1}!=${operationListDto.operations.getTotalPages()-2}">&ensp;...</span>
+                        &nbsp;
+                        <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page='+${operationListDto.operations.getTotalPages() - 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="${operationListDto.operations.getTotalPages()}"></a>
+                    </span>
+                </span>
+                <span th:if="${PASdto.page}==${operationListDto.operations.getTotalPages()-1} and ${operationListDto.operations.getTotalPages()>1}">
+                    <span th:if="1 < ${operationListDto.operations.getTotalPages()}">
+                        <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page=0&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})">1</a>
+                        &nbsp;
+                    </span>
+                    <span th:if="2 < ${operationListDto.operations.getTotalPages()}">
+                        <span th:if="${operationListDto.operations.getTotalPages() != 3}">...&ensp;</span>
+                        <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page='+${operationListDto.operations.getTotalPages() - 2}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="${operationListDto.operations.getTotalPages() - 1}"></a>
+                        &nbsp;
+                    </span>
+                    <span th:text="${PASdto.page + 1}"></span>
+                </span>
+                <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${operationListDto.operations.getTotalPages() - 1})">
+                    <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page=0&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="'1'"></a>
+                    &nbsp;
+                    <span th:if="${PASdto.page} > 2">...&ensp;</span>
 
-  <br>
-  <h3>You might perform operations by clicking link below:</h3>
-  <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'/new-operation'">
-    <h4 th:text="'Perform operation'"></h4>
-  </a>
+                    <span th:if="${PASdto.page} > 1">
+                        <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page='+${PASdto.page - 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="${PASdto.page}"></a>
+                        &nbsp;
+                    </span>
+                    <span th:text="${PASdto.page+1}"></span>
+                    &nbsp;
+                    <span th:if="${operationListDto.operations.getTotalPages()}-2 > ${PASdto.page}">
+                        <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="${PASdto.page+2}"></a>
+                        &nbsp;
+                    </span>
+
+
+                    <span th:if="${PASdto.page} < ${operationListDto.operations.getTotalPages() - 3}">...&ensp;</span>
+                    <a th:href="'/clients/'+${operationListDto.commonInfo.clientId}+'/account-'+${operationListDto.commonInfo.accountId}+'?page='+${operationListDto.operations.getTotalPages()-1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${OSdto.operationDateTime == null} ? '' : '&operationDateTime='+${OSdto.operationDateTime})+(${OSdto.sum == null} ? '' : '&sum='+${OSdto.sum})+(${OSdto.operationKind == null} ? '' : '&operationKind='+${OSdto.operationKind})+(${OSdto.currencyFrom == null} ? '' : '&currencyFrom='+${OSdto.currencyFrom})+(${OSdto.operationDateTimeOT == null || OSdto.operationDateTimeOT.equals(OSdto.DEFAULT_OPERATION_DATE_TIME_OPERATION_TYPE)} ? '' : '&operationDateTimeOT='+${OSdto.operationDateTimeOT})+(${OSdto.sumOT == null || OSdto.sumOT.equals(OSdto.DEFAULT_SUM_OPERATION_TYPE)} ? '' : '&sumOT='+${OSdto.sumOT})+(${OSdto.operationKind == null || OSdto.operationKindOT.equals(OSdto.DEFAULT_OPERATION_KIND_OPERATION_TYPE)} ? '' : '&operationKindOT='+${OSdto.operationKindOT})+(${OSdto.currencyFromOT == null || OSdto.currencyFromOT.equals(OSdto.DEFAULT_CURRENCY_FROM_OPERATION_TYPE)} ? '' : '&currencyFromOT='+${OSdto.currencyFromOT})" th:text="${operationListDto.operations.getTotalPages()}"></a>
+                </span>
+        </h4>
+        <br>
+
+
+        <div th:each="operation : ${operationListDto.getOperations()}">
+            <h4 th:text="${operation.operationDateTime.getDayOfMonth()}+' '+${operation.operationDateTime.getMonth().toString()}+' '+${operation.operationDateTime.getYear()}+' '+${operation.operationDateTime.getHour()}+':'+${operation.operationDateTime.getMinute()}+':'+${operation.operationDateTime.getSecond()}+':'"></h4>
+
+            <h5 th:text="'Main operation: '+(${operation.deposit == null} ? 'withdrawal' : 'deposit')"></h5>
+            <h5 th:text="'Transaction sum: '+(${operation.deposit == null} ? ${operation.withdrawal} : ${operation.deposit})+' '+${operationListDto.commonInfo.currency}"></h5>
+
+            <br>
+        </div>
+    </span>
 </body>
 </html>

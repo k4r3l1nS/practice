@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 @Setter
 public abstract class PagingAndSortingDto {
 
-    static int DEFAULT_PAGE;
-    static int DEFAULT_SIZE;
-    static String DEFAULT_SORT_BY;
-    static String DEFAULT_ORDER;
+    public static int DEFAULT_PAGE;
+    public static int DEFAULT_SIZE;
+    public static String DEFAULT_SORT_BY;
+    public static String DEFAULT_ORDER;
 
     Integer page;
     Integer size;
