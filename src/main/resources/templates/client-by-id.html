@@ -7,6 +7,7 @@
 </head>
 <body>
     <header th:insert="blocks/header :: header"></header>
+    <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
     <h3>Click the following button to add new account:</h3>
     <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/new-account'">

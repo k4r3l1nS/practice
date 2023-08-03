@@ -7,6 +7,8 @@ import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.models.currency_info.Currency;
 import com.practice.demo.models.currency_info.CurrencyRates;
 import com.practice.demo.service.AccountService;
+import com.practice.demo.uri_handler.UriHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +23,10 @@ public class AccountController {
     @GetMapping("/clients/{id}")
     public String clientById(@ModelAttribute AccountPagingAndSortingDto accountPagingAndSortingDto,
                              @ModelAttribute AccountSpecificationDto accountSpecificationDto,
-                             @PathVariable(value = "id") Long clientId, Model model) {
+                             @PathVariable(value = "id") Long clientId,
+                             Model model, HttpServletRequest httpServletRequest) {
+
+        model.addAttribute("uriPairList", UriHandler.parse(httpServletRequest.getRequestURI()));
 
         accountPagingAndSortingDto.fillEmptyFields();
         accountSpecificationDto.fillEmptyFields();

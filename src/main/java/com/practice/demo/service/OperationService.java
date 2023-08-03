@@ -32,8 +32,7 @@ public class OperationService {
     public void addOperation(OperationDto operationDto, Long accountId)
             throws InvalidSumInputException, EmptyFieldException {
 
-        if (operationDto.getOperationKind() == null || operationDto.getCurrencyFrom() == null
-                || operationDto.getTransactionSum() == null) {
+        if (operationDto.hasEmptyFields()) {
 
             throw new EmptyFieldException("All fields and radio buttons must be filled in");
         }

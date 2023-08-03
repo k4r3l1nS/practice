@@ -5,6 +5,8 @@ import com.practice.demo.dto.paging_and_sotring_dto.models.ClientPagingAndSortin
 import com.practice.demo.dto.specification_dto.models.ClientSpecificationDto;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.service.ClientService;
+import com.practice.demo.uri_handler.UriHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,7 +21,10 @@ public class ClientController {
 
     @GetMapping("/clients")
     public String clients(@ModelAttribute ClientPagingAndSortingDto clientPagingAndSortingDto,
-                          @ModelAttribute ClientSpecificationDto clientSpecificationDto, Model model) {
+                          @ModelAttribute ClientSpecificationDto clientSpecificationDto,
+                          Model model, HttpServletRequest httpServletRequest) {
+
+        model.addAttribute("uriPairList", UriHandler.parse(httpServletRequest.getRequestURI()));
 
         clientPagingAndSortingDto.fillEmptyFields();
         clientSpecificationDto.fillEmptyFields();

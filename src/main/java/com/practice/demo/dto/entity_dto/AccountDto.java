@@ -47,4 +47,9 @@ public class AccountDto {
             accountEntity.setCurrency(currency);
         }
     }
+
+    public boolean hasEmptyFields() {
+
+        return accountName == null || accountName.isEmpty() || firstDeposit == null || currency == null;
+    }
 }

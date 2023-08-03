@@ -12,10 +12,8 @@ import java.util.List;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    Client findClientByFirstNameAndLastNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
 
-    @Query("select E from ClientView E")
-    List<ClientView> getAllClients();
+    boolean existsByFirstNameAndLastNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
 
     @Query("select E from ClientView E where E.id=?1")
     ClientView findClientById(Long id);

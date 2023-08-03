@@ -4,6 +4,7 @@ import com.practice.demo.dto.entity_dto.AccountDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
 import com.practice.demo.exceptions.models.AccountNameAlreadyTakenException;
+import com.practice.demo.exceptions.models.EmptyFieldException;
 import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.Operation;
@@ -33,15 +34,20 @@ public class AccountService {
     private final AccountViewRepositoty accountViewRepositoty;
 
     public void addAccount(AccountDto accountDto, Long clientId)
-            throws AccountNameAlreadyTakenException, InvalidSumInputException {
+            throws AccountNameAlreadyTakenException, InvalidSumInputException, EmptyFieldException {
 
-        if (accountRepository.findAccountByName(accountDto.getAccountName()) != null
+        if (accountDto.hasEmptyFields()) {
+
+            throw new EmptyFieldException("All fields and radio buttons must be filled in");
+        }
+
+        if (accountRepository.existsByName(accountDto.getAccountName())
                 && accountRepository.findAccountByName(accountDto.getAccountName()).isActive()) {
 
             throw new AccountNameAlreadyTakenException("This account name is already taken");
         }
 
-        if (accountDto.getFirstDeposit() == null || accountDto.getFirstDeposit() <= 0) {
+        if (accountDto.getFirstDeposit() <= 0) {
 
             throw new InvalidSumInputException("First deposit is mandatory and must be above 0");
         }

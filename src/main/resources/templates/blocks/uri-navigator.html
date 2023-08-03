@@ -1,0 +1,9 @@
+<div th:fragment="uri-navigator">
+  <h5>
+    |
+    <span th:each="pair : ${uriPairList}">
+              <a th:href="${pair.b}" th:text="${pair.a}"></a>
+              |
+          </span>
+  </h5>
+</div>

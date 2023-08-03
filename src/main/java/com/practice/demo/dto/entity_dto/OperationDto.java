@@ -27,4 +27,9 @@ public class OperationDto {
 
         return operation;
     }
+
+    public boolean hasEmptyFields() {
+
+        return operationKind == null || transactionSum == null || currencyFrom == null;
+    }
 }

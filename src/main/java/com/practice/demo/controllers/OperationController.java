@@ -8,6 +8,8 @@ import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.currency_info.Currency;
 import com.practice.demo.service.OperationService;
+import com.practice.demo.uri_handler.UriHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,10 @@ public class OperationController {
     public String accountById(@PathVariable(value = "client_id") Long clientId,
                               @PathVariable(value = "account_id") Long accountId,
                               @ModelAttribute OperationPagingAndSortingDto pagingAndSortingDto,
-                              @ModelAttribute OperationSpecificationDto operationSpecificationDto, Model model) {
+                              @ModelAttribute OperationSpecificationDto operationSpecificationDto,
+                              Model model, HttpServletRequest httpServletRequest) {
+
+        model.addAttribute("uriPairList", UriHandler.parse(httpServletRequest.getRequestURI()));
 
         pagingAndSortingDto.fillEmptyFields();
         operationSpecificationDto.fillEmptyFields();

@@ -46,4 +46,11 @@ public class ClientDto {
         if (this.email != null && !this.email.isEmpty())
             entity.setEmail(this.email);
     }
+
+    public boolean hasEmptyFields() {
+
+        return firstName == null || firstName.isEmpty() || lastName == null ||
+                lastName.isEmpty() || email == null || email.isEmpty() ||
+                birthDate == null;
+    }
 }

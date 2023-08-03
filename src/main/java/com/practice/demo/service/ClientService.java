@@ -62,21 +62,18 @@ public class ClientService {
 
         Objects.requireNonNull(clientDto);
 
-        if (clientRepository.findClientByFirstNameAndLastNameAndBirthDate(clientDto.getFirstName(),
-                clientDto.getLastName(), clientDto.getBirthDate()) != null) {
-
-            throw new ClientAlreadyExistsException("Client with these data already exists");
-        }
-
-        if (clientDto.getFirstName() == null || clientDto.getFirstName().isEmpty() || clientDto.getLastName() == null ||
-                clientDto.getLastName().isEmpty() || clientDto.getEmail() == null || clientDto.getEmail().isEmpty() ||
-                clientDto.getBirthDate() == null) {
+        if (clientDto.hasEmptyFields()) {
 
             throw new EmptyFieldException("All fields must be filled in");
         }
 
-        var client = clientDto.toEntity();
-        clientRepository.save(client);
+        if (clientRepository.existsByFirstNameAndLastNameAndBirthDate(clientDto.getFirstName(),
+                clientDto.getLastName(), clientDto.getBirthDate())) {
+
+            throw new ClientAlreadyExistsException("Client with these data already exists");
+        }
+
+        clientRepository.save(clientDto.toEntity());
     }
 
     public void updateClient(ClientDto clientDto, Long clientId) {

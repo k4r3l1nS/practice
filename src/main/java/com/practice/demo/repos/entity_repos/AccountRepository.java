@@ -13,6 +13,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
      Account findAccountByName(String accountName);
 
+     boolean existsByName(String name);
+
      @Query("select E from AccountView E where E.clientId=?1 and (E.isActive is null or E.isActive=true)")
      List<AccountView> findAllAccountsByClientId(Long clientId);
 
