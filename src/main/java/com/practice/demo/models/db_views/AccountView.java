@@ -1,6 +1,6 @@
 package com.practice.demo.models.db_views;
 
-import com.practice.demo.models.rates.Currency;
+import com.practice.demo.models.currency_info.Currency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

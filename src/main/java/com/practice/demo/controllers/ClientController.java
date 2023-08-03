@@ -1,13 +1,9 @@
 package com.practice.demo.controllers;
 
-import com.practice.demo.dto.*;
-import com.practice.demo.dto.paging_and_sotring.AccountPagingAndSortingDto;
-import com.practice.demo.dto.paging_and_sotring.ClientPagingAndSortingDto;
-import com.practice.demo.dto.specification.models.AccountSpecificationDto;
-import com.practice.demo.dto.specification.models.ClientSpecificationDto;
+import com.practice.demo.dto.entity_dto.ClientDto;
+import com.practice.demo.dto.paging_and_sotring_dto.models.ClientPagingAndSortingDto;
+import com.practice.demo.dto.specification_dto.models.ClientSpecificationDto;
 import com.practice.demo.models.db_views.ClientView;
-import com.practice.demo.models.rates.Currency;
-import com.practice.demo.service.AccountService;
 import com.practice.demo.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     private final ClientService clientService;
-    private final AccountService accountService;
 
     @GetMapping("/clients")
     public String clients(@ModelAttribute ClientPagingAndSortingDto clientPagingAndSortingDto,
@@ -37,27 +32,6 @@ public class ClientController {
         model.addAttribute("clients", clients);
 
         return "clients";
-    }
-
-    @GetMapping("/clients/{id}")
-    public String clientById(@ModelAttribute AccountPagingAndSortingDto accountPagingAndSortingDto,
-                             @ModelAttribute AccountSpecificationDto accountSpecificationDto,
-                             @PathVariable(value = "id") Long clientId, Model model) {
-
-        accountPagingAndSortingDto.fillEmptyFields();
-        accountSpecificationDto.fillEmptyFields();
-
-        model.addAttribute("PASdto", accountPagingAndSortingDto);
-        model.addAttribute("ASdto", accountSpecificationDto);
-
-        AccountListDto accountListDto = AccountListDto.valueFrom(
-                accountService.fetchNextPageByClientId(accountPagingAndSortingDto, accountSpecificationDto, clientId),
-                accountService.findOneAccountView(clientId));
-
-        model.addAttribute("accountListDto", accountListDto);
-        model.addAttribute("currencies", Currency.values());
-
-        return "client-by-id";
     }
 
     @GetMapping("/clients/add")

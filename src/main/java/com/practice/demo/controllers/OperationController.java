@@ -1,9 +1,12 @@
 package com.practice.demo.controllers;
 
-import com.practice.demo.dto.OperationDto;
-import com.practice.demo.models.Operation;
+import com.practice.demo.dto.entity_dto.OperationDto;
+import com.practice.demo.dto.entity_dto.OperationListDto;
+import com.practice.demo.dto.paging_and_sotring_dto.models.OperationPagingAndSortingDto;
+import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
+import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
-import com.practice.demo.models.rates.Currency;
+import com.practice.demo.models.currency_info.Currency;
 import com.practice.demo.service.OperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,30 @@ import org.springframework.ui.Model;
 public class OperationController {
 
     private final OperationService operationService;
+
+    @GetMapping("/clients/{client_id}/account-{account_id}")
+    public String accountById(@PathVariable(value = "client_id") Long clientId,
+                              @PathVariable(value = "account_id") Long accountId,
+                              @ModelAttribute OperationPagingAndSortingDto pagingAndSortingDto,
+                              @ModelAttribute OperationSpecificationDto operationSpecificationDto, Model model) {
+
+        pagingAndSortingDto.fillEmptyFields();
+        operationSpecificationDto.fillEmptyFields();
+
+        model.addAttribute("PASdto", pagingAndSortingDto);
+        model.addAttribute("OSdto", operationSpecificationDto);
+
+        OperationListDto operationListDto = OperationListDto.valueFrom(
+                operationService.fetchNextPageByAccountId(pagingAndSortingDto, operationSpecificationDto, accountId),
+                operationService.findOneOperationView(accountId));
+
+        model.addAttribute("operationListDto", operationListDto);
+
+        model.addAttribute("operationKinds", Operation.OperationKind.values());
+        model.addAttribute("currencies", Currency.values());
+
+        return "account-by-id";
+    }
 
     @GetMapping("/clients/{client_id}/account-{account_id}/operation-{operation_id}")
     public String operationById(@PathVariable(value="client_id") Long clientId,

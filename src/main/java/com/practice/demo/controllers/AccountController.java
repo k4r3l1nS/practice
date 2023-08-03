@@ -1,50 +1,42 @@
 package com.practice.demo.controllers;
 
-import com.practice.demo.dto.AccountDto;
-import com.practice.demo.dto.OperationListDto;
-import com.practice.demo.dto.paging_and_sotring.OperationPagingAndSortingDto;
-import com.practice.demo.dto.specification.models.OperationSpecificationDto;
-import com.practice.demo.models.Operation;
-import com.practice.demo.models.rates.Currency;
-import com.practice.demo.models.rates.CurrencyRates;
+import com.practice.demo.dto.entity_dto.AccountDto;
+import com.practice.demo.dto.entity_dto.AccountListDto;
+import com.practice.demo.dto.paging_and_sotring_dto.models.AccountPagingAndSortingDto;
+import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
+import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_info.CurrencyRates;
 import com.practice.demo.service.AccountService;
-import com.practice.demo.service.OperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
-    private final OperationService operationService;
 
-    @GetMapping("/clients/{client_id}/account-{account_id}")
-    public String accountById(@PathVariable(value = "client_id") Long clientId,
-                              @PathVariable(value = "account_id") Long accountId,
-                              @ModelAttribute OperationPagingAndSortingDto pagingAndSortingDto,
-                              @ModelAttribute OperationSpecificationDto operationSpecificationDto, Model model) {
+    @GetMapping("/clients/{id}")
+    public String clientById(@ModelAttribute AccountPagingAndSortingDto accountPagingAndSortingDto,
+                             @ModelAttribute AccountSpecificationDto accountSpecificationDto,
+                             @PathVariable(value = "id") Long clientId, Model model) {
 
-        pagingAndSortingDto.fillEmptyFields();
-        operationSpecificationDto.fillEmptyFields();
+        accountPagingAndSortingDto.fillEmptyFields();
+        accountSpecificationDto.fillEmptyFields();
 
-        model.addAttribute("PASdto", pagingAndSortingDto);
-        model.addAttribute("OSdto", operationSpecificationDto);
+        model.addAttribute("PASdto", accountPagingAndSortingDto);
+        model.addAttribute("ASdto", accountSpecificationDto);
 
-        OperationListDto operationListDto = OperationListDto.valueFrom(
-                operationService.fetchNextPageByAccountId(pagingAndSortingDto, operationSpecificationDto, accountId),
-                operationService.findOneOperationView(accountId));
+        AccountListDto accountListDto = AccountListDto.valueFrom(
+                accountService.fetchNextPageByClientId(accountPagingAndSortingDto, accountSpecificationDto, clientId),
+                accountService.findOneAccountView(clientId));
 
-        model.addAttribute("operationListDto", operationListDto);
-
-        model.addAttribute("operationKinds", Operation.OperationKind.values());
+        model.addAttribute("accountListDto", accountListDto);
         model.addAttribute("currencies", Currency.values());
 
-        return "account-by-id";
+        return "client-by-id";
     }
 
     @GetMapping("/clients/{id}/new-account")
@@ -91,7 +83,7 @@ public class AccountController {
 
     @GetMapping("/clients/{client_id}/account-{account_id}/deactivate")
     public String deactivateAccount(@PathVariable(value = "client_id") Long clientId,
-                                 @PathVariable(value = "account_id") Long accountId, Model model) {
+                                 @PathVariable(value = "account_id") Long accountId) {
 
         accountService.deactivateAccountById(accountId);
 

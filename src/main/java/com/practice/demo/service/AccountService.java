@@ -1,18 +1,18 @@
 package com.practice.demo.service;
 
-import com.practice.demo.dto.AccountDto;
-import com.practice.demo.dto.specification.models.AccountSpecificationDto;
-import com.practice.demo.dto.paging_and_sotring.PagingAndSortingDto;
-import com.practice.demo.exceptions.model.AccountNameAlreadyTakenException;
-import com.practice.demo.exceptions.model.InvalidSumInputException;
-import com.practice.demo.models.Account;
-import com.practice.demo.models.Operation;
+import com.practice.demo.dto.entity_dto.AccountDto;
+import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
+import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
+import com.practice.demo.exceptions.models.AccountNameAlreadyTakenException;
+import com.practice.demo.exceptions.models.InvalidSumInputException;
+import com.practice.demo.models.entities.Account;
+import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.specification.Condition;
 import com.practice.demo.models.specification.SpecificationBuilder;
-import com.practice.demo.repos.AccountRepository;
-import com.practice.demo.repos.ClientRepository;
-import com.practice.demo.repos.OperationRepository;
+import com.practice.demo.repos.entity_repos.AccountRepository;
+import com.practice.demo.repos.entity_repos.ClientRepository;
+import com.practice.demo.repos.entity_repos.OperationRepository;
 import com.practice.demo.repos.db_view_repos.AccountViewRepositoty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,10 +27,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
-    private final OperationRepository operationRepository;
 
+    private final AccountRepository accountRepository;
     private final AccountViewRepositoty accountViewRepositoty;
 
     public void addAccount(AccountDto accountDto, Long clientId)
@@ -79,9 +78,7 @@ public class AccountService {
     @Transactional(readOnly = true)
     public AccountView findAccountById(Long accountId) {
 
-        var view = accountRepository.findAccountById(accountId);
-
-        return view;
+        return accountRepository.findAccountViewById(accountId);
     }
 
     public void deactivateAccountById(Long accountId) {

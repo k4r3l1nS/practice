@@ -1,16 +1,16 @@
 package com.practice.demo.service;
 
-import com.practice.demo.dto.OperationDto;
-import com.practice.demo.dto.paging_and_sotring.PagingAndSortingDto;
-import com.practice.demo.dto.specification.models.OperationSpecificationDto;
-import com.practice.demo.exceptions.model.EmptyFieldException;
-import com.practice.demo.exceptions.model.InvalidSumInputException;
-import com.practice.demo.models.Operation;
+import com.practice.demo.dto.entity_dto.OperationDto;
+import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
+import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
+import com.practice.demo.exceptions.models.EmptyFieldException;
+import com.practice.demo.exceptions.models.InvalidSumInputException;
+import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.specification.Condition;
 import com.practice.demo.models.specification.SpecificationBuilder;
-import com.practice.demo.repos.AccountRepository;
-import com.practice.demo.repos.OperationRepository;
+import com.practice.demo.repos.entity_repos.AccountRepository;
+import com.practice.demo.repos.entity_repos.OperationRepository;
 import com.practice.demo.repos.db_view_repos.OperationViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

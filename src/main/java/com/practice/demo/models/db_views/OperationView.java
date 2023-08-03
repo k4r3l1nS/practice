@@ -1,7 +1,7 @@
 package com.practice.demo.models.db_views;
 
-import com.practice.demo.models.Operation;
-import com.practice.demo.models.rates.Currency;
+import com.practice.demo.models.entities.Operation;
+import com.practice.demo.models.currency_info.Currency;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.Immutable;

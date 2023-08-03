@@ -1,15 +1,15 @@
 package com.practice.demo.service;
 
-import com.practice.demo.dto.ClientDto;
-import com.practice.demo.dto.specification.models.ClientSpecificationDto;
-import com.practice.demo.dto.paging_and_sotring.ClientPagingAndSortingDto;
-import com.practice.demo.exceptions.model.ClientAlreadyExistsException;
-import com.practice.demo.exceptions.model.EmptyFieldException;
-import com.practice.demo.models.Client;
+import com.practice.demo.dto.entity_dto.ClientDto;
+import com.practice.demo.dto.specification_dto.models.ClientSpecificationDto;
+import com.practice.demo.dto.paging_and_sotring_dto.models.ClientPagingAndSortingDto;
+import com.practice.demo.exceptions.models.ClientAlreadyExistsException;
+import com.practice.demo.exceptions.models.EmptyFieldException;
+import com.practice.demo.models.entities.Client;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.specification.SpecificationBuilder;
-import com.practice.demo.repos.AccountRepository;
-import com.practice.demo.repos.ClientRepository;
+import com.practice.demo.repos.entity_repos.AccountRepository;
+import com.practice.demo.repos.entity_repos.ClientRepository;
 import com.practice.demo.repos.db_view_repos.ClientViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,6 @@ import java.util.Objects;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final AccountRepository accountRepository;
     private final ClientViewRepository clientViewRepository;
 
     @Transactional(readOnly = true)
@@ -39,16 +38,6 @@ public class ClientService {
     public ClientView findClientById(Long clientId) {
 
         return clientRepository.findClientById(clientId);
-    }
-
-    public List<ClientView> findAllClients() {
-
-        return clientRepository.getAllClients();
-    }
-
-    public Page<Client> fetchNextPage(Pageable pageable) {
-
-        return clientRepository.findAll(pageable);
     }
 
     public Page<ClientView> fetchNextPage(ClientPagingAndSortingDto pagingAndSortingDto) {

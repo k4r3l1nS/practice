@@ -31,9 +31,10 @@ public class SpecificationImpl<T> implements Specification<T> {
                 return criteriaBuilder.greaterThan(root.get(condition.getPath()).as(condition.getRightOperand().get(0).getClass()),
                         condition.getRightOperand().get(0));
 
-            case IN:{
-//                System.out.println(root.get(condition.getPath()).toString()); condition.getRightOperand().stream().forEach(x -> System.out.println(x));
-                Predicate predicate = root.get(condition.getPath()).as(condition.getRightOperand().get(0).getClass()).in(condition.getRightOperand());
+            case IN: {
+
+                Predicate predicate = root.get(condition.getPath())
+                        .as(condition.getRightOperand().get(0).getClass()).in(condition.getRightOperand());
 
                 if (condition.getRightOperand().contains(null))
                     return criteriaBuilder.or(predicate, root.get(condition.getPath()).isNull());
