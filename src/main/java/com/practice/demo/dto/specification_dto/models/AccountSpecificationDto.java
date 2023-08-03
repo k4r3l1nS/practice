@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class AccountSpecificationDto implements SpecificationDto {
 
-    public final static String DEFAULT_ACCOUNT_NAME_OPERATION_TYPE = "=";
+    public final static String DEFAULT_ACCOUNT_NAME_OPERATION_TYPE = "begins with";
     public final static String DEFAULT_BALANCE_OPERATION_TYPE = ">";
     public final static String DEFAULT_CURRENCY_OPERATION_TYPE = "=";
     public final static String DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE = "=";

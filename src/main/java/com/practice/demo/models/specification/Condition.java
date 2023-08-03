@@ -26,7 +26,8 @@ public class Condition {
         GREATER(">"),
         LESS("<"),
         EQUALS("="),
-        IN ("in");
+        IN ("in"),
+        BEGINS_WITH("begins with");
 
         private String name;
 

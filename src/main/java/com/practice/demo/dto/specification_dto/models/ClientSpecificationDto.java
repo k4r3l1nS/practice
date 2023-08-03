@@ -17,8 +17,8 @@ import java.util.List;
 @Builder
 public class ClientSpecificationDto implements SpecificationDto {
 
-    public final static String DEFAULT_FIRST_NAME_OPERATION_TYPE = "=";
-    public final static String DEFAULT_LAST_NAME_OPERATION_TYPE = "=";
+    public final static String DEFAULT_FIRST_NAME_OPERATION_TYPE = "begins with";
+    public final static String DEFAULT_LAST_NAME_OPERATION_TYPE = "begins with";
     public final static String DEFAULT_NUMBER_OF_ACCOUNTS_OPERATION_TYPE = "=";
     public final static String DEFAULT_REGISTRATION_DATE_OPERATION_TYPE = ">";
     public final static String DEFAULT_BIRTH_DATE_OPERATION_TYPE = ">";

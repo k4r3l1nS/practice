@@ -55,7 +55,8 @@
 
                     &ensp;First name&ensp;
                     <select th:field="*{firstNameOT}">
-                        <option value="=" selected="selected">=</option>
+                        <option value="=" th:selected="${CSdto.getFirstNameOT()}=='='">=</option>
+                        <option value="begins with" th:selected="${CSdto.getFirstNameOT()}=='begins with'">begins with</option>
                     </select>
                     &ensp;
                     <input type="text" th:value="${CSdto.getFirstName() == null || CSdto.getFirstName().isEmpty()} ? '' : ${CSdto.getFirstName()}" placeholder="Enter first name" th:field="*{firstName}">
@@ -63,7 +64,8 @@
 
                     &ensp;Last name&ensp;
                     <select th:field="*{lastNameOT}">
-                        <option value="=">=</option>
+                        <option value="=" th:selected="${CSdto.lastNameOT}=='='">=</option>
+                        <option value="begins with" th:selected="${CSdto.firstNameOT}=='begins with'">begins with</option>
                     </select>
                     &ensp;
                     <input type="text" th:value="${CSdto.getLastName() == null || CSdto.getLastName().isEmpty()} ? '' : ${CSdto.getLastName()}" placeholder="Enter last name" th:field="*{lastName}">

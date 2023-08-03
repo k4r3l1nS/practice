@@ -66,7 +66,8 @@
 
                 &ensp;Account name&ensp;
                 <select th:field="*{accountNameOT}">
-                    <option value="=" selected="selected">=</option>
+                    <option value="=" th:selected="${ASdto.accountNameOT}=='='">=</option>
+                    <option value="begins with" th:selected="${ASdto.accountNameOT}=='begins with'">begins with</option>
                 </select>
                 &ensp;
                 <input type="text" th:value="${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : ${ASdto.accountName}" placeholder="Enter account name" th:field="*{accountName}">

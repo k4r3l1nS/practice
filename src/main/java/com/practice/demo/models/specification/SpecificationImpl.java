@@ -42,6 +42,11 @@ public class SpecificationImpl<T> implements Specification<T> {
                 return predicate;
             }
 
+            case BEGINS_WITH: {
+
+                return criteriaBuilder.like(root.get(condition.getPath()).as(String.class), condition.getRightOperand().get(0).toString() + "%");
+            }
+
             default:
                 return null;
         }
