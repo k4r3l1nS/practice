@@ -15,7 +15,7 @@
     <input type="text" th:field="*{accountName}" placeholder="Enter an account name" class="form-control">
     <br>
     <h4>2. First deposit</h4>
-    <input type="number" th:field="*{firstDeposit}" placeholder="Enter your first deposit" class="form-control">
+    <input type="number" step="0.01" th:field="*{firstDeposit}" placeholder="Enter your first deposit" class="form-control">
     <br>
     <h4>3. Currency:</h4>
     <div th:each="currency : ${currencies}">

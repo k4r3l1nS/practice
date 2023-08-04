@@ -36,9 +36,9 @@ public class SpecificationBuilder<T> {
 
         List<Specification<T>> specifications = new ArrayList<>();
 
-        for (var clientViewCondition : conditions) {
+        for (var condition : conditions) {
 
-            specifications.add(new SpecificationImpl<>(clientViewCondition));
+            specifications.add(new SpecificationImpl<>(condition));
         }
 
         Specification<T> finalSpecification = specifications.get(0);

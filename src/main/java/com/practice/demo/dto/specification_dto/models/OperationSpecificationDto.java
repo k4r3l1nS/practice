@@ -37,30 +37,34 @@ public class OperationSpecificationDto implements SpecificationDto {
 
         if (operationDateTime != null) {
 
-            conditions.add(new Condition("operationDateTime", Arrays.asList(operationDateTime),
-                    Condition.OperationType.resolveByName(operationDateTimeOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("operationDateTime").operation(Condition.OperationType.resolveByName(operationDateTimeOT))
+                    .value(operationDateTime).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (operationKind != null) {
 
-            conditions.add(new Condition("operationKind", Arrays.asList(operationKind),
-                    Condition.OperationType.resolveByName(operationKindOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("operationKind").operation(Condition.OperationType.resolveByName(operationKindOT))
+                    .value(operationKind).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (transactionSum != null) {
 
-            conditions.add(new Condition("transactionSum", Arrays.asList(transactionSum),
-                    Condition.OperationType.resolveByName(transactionSumOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("transactionSum").operation(Condition.OperationType.resolveByName(transactionSumOT))
+                    .value(transactionSum).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (currencyFrom != null) {
 
-            conditions.add(new Condition("operationDateTime", Arrays.asList(currencyFrom),
-                    Condition.OperationType.resolveByName(currencyFromOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("currencyFrom").operation(Condition.OperationType.resolveByName(currencyFromOT))
+                    .value(currencyFrom).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (!conditions.isEmpty())
@@ -73,8 +77,10 @@ public class OperationSpecificationDto implements SpecificationDto {
 
         List<Condition> conditions = new ArrayList<>();
 
-        conditions.add(0, new Condition("accountId", Arrays.asList(accountId.toString()), Condition.OperationType.EQUALS,
-                Condition.LogicalOperatorType.AND));
+        conditions.add(0, Condition.builder()
+                .fieldName("accountId").operation(Condition.OperationType.EQUALS)
+                .value(accountId).logicalOperator(Condition.LogicalOperatorType.AND)
+                .build());
 
         var otherConditions = toConditions();
 

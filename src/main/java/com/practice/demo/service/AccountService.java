@@ -111,10 +111,14 @@ public class AccountService {
     public AccountView findOneAccountView(Long clientId) {
 
         var specification = new SpecificationBuilder<>()
-                .with(new Condition("clientId", Arrays.asList(clientId.toString()), Condition.OperationType.EQUALS,
-                        Condition.LogicalOperatorType.AND))
-                .with(new Condition("isActive", Arrays.asList(true, null), Condition.OperationType.IN,
-                        Condition.LogicalOperatorType.END))
+                .with(Condition.builder()
+                        .fieldName("clientId").operation(Condition.OperationType.EQUALS)
+                        .value(clientId).logicalOperator(Condition.LogicalOperatorType.AND)
+                        .build())
+                .with(Condition.builder()
+                        .fieldName("isActive").operation(Condition.OperationType.IN)
+                        .values(Arrays.asList(true, null)).logicalOperator(Condition.LogicalOperatorType.END)
+                        .build())
                 .build();
 
         List<AccountView> accountView =  accountViewRepositoty.findAll(specification);

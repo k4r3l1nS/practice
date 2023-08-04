@@ -47,42 +47,49 @@ public class AccountSpecificationDto implements SpecificationDto {
 
         List<Condition> conditions = new ArrayList<>();
 
-        conditions.add(new Condition("isActive", Arrays.asList(true, null),
-                Condition.OperationType.IN, Condition.LogicalOperatorType.AND));
+        conditions.add((Condition.builder()
+                .fieldName("isActive").operation(Condition.OperationType.IN)
+                .values(Arrays.asList(true, null)).logicalOperator(Condition.LogicalOperatorType.AND)
+                .build()));
 
         if (accountName != null && !accountName.isEmpty()) {
 
-            conditions.add(new Condition("accountName", Arrays.asList(accountName),
-                    Condition.OperationType.resolveByName(accountNameOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("accountName").operation(Condition.OperationType.resolveByName(accountNameOT))
+                    .value(accountName).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (balance != null) {
 
-            conditions.add(new Condition("balance", Arrays.asList(balance),
-                    Condition.OperationType.resolveByName(balanceOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("balance").operation(Condition.OperationType.resolveByName(balanceOT))
+                    .value(balance).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (currency != null) {
 
-            conditions.add(new Condition("currency", Arrays.asList(currency.ordinal()),
-                    Condition.OperationType.resolveByName(currencyOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("currency").operation(Condition.OperationType.resolveByName(currencyOT))
+                    .value(currency).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (latestOperation != null) {
 
-            conditions.add(new Condition("latestOperation", Arrays.asList(latestOperation.toString()),
-                    Condition.OperationType.resolveByName(latestOperationOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("latestOperation").operation(Condition.OperationType.resolveByName(latestOperationOT))
+                    .value(latestOperation).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (numberOfOperations != null) {
 
-            conditions.add(new Condition("numberOfOperations", Arrays.asList(numberOfOperations.toString()),
-                    Condition.OperationType.resolveByName(numberOfOperationsOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("numberOfOperations").operation(Condition.OperationType.resolveByName(numberOfOperationsOT))
+                    .value(numberOfOperations).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         conditions.get(conditions.size() - 1).setLogicalOperator(Condition.LogicalOperatorType.END);
@@ -94,8 +101,10 @@ public class AccountSpecificationDto implements SpecificationDto {
 
         List<Condition> conditions = new ArrayList<>();
 
-        conditions.add(new Condition("clientId", Arrays.asList(clientId.toString()), Condition.OperationType.EQUALS,
-                Condition.LogicalOperatorType.AND));
+        conditions.add(Condition.builder()
+                .fieldName("clientId").operation(Condition.OperationType.EQUALS)
+                .value(clientId).logicalOperator(Condition.LogicalOperatorType.AND)
+                .build());
 
         var otherConditions = toConditions();
 

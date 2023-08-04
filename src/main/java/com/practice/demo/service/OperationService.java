@@ -63,8 +63,10 @@ public class OperationService {
     public OperationView findOneOperationView(Long accountId) {
 
         var specification = new SpecificationBuilder<>()
-                .with(new Condition("accountId", Arrays.asList(accountId.toString()), Condition.OperationType.EQUALS,
-                        Condition.LogicalOperatorType.AND))
+                .with(Condition.builder()
+                        .fieldName("accountId").operation(Condition.OperationType.EQUALS)
+                        .value(accountId).logicalOperator(Condition.LogicalOperatorType.AND)
+                        .build())
                 .build();
 
         List<OperationView> operationView =  operationViewRepository.findAll(specification);

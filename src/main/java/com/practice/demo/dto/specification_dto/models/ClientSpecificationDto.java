@@ -49,37 +49,42 @@ public class ClientSpecificationDto implements SpecificationDto {
 
         if (firstName != null && !firstName.isEmpty()) {
 
-            conditions.add(new Condition("firstName", Arrays.asList(firstName),
-                    Condition.OperationType.resolveByName(firstNameOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("firstName").operation(Condition.OperationType.resolveByName(firstNameOT))
+                    .value(firstName).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (lastName != null && !lastName.isEmpty()) {
 
-            conditions.add(new Condition("lastName", Arrays.asList(lastName),
-                    Condition.OperationType.resolveByName(lastNameOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("lastName").operation(Condition.OperationType.resolveByName(lastNameOT))
+                    .value(lastName).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (numberOfAccounts != null) {
 
-            conditions.add(new Condition("numberOfAccounts", Arrays.asList(numberOfAccounts.toString()),
-                    Condition.OperationType.resolveByName(numberOfAccountsOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("numberOfAccounts").operation(Condition.OperationType.resolveByName(numberOfAccountsOT))
+                    .value(numberOfAccounts).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (registrationDate != null) {
 
-            conditions.add(new Condition("registrationDate", Arrays.asList(registrationDate.toString()),
-                    Condition.OperationType.resolveByName(registrationDateOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("registrationDate").operation(Condition.OperationType.resolveByName(registrationDateOT))
+                    .value(registrationDate).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (birthDate != null) {
 
-            conditions.add(new Condition("birthDate", Arrays.asList(birthDate.toString()),
-                    Condition.OperationType.resolveByName(birthDateOT),
-                    Condition.LogicalOperatorType.AND));
+            conditions.add(Condition.builder()
+                    .fieldName("birthDate").operation(Condition.OperationType.resolveByName(birthDateOT))
+                    .value(birthDate).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
         }
 
         if (!conditions.isEmpty())

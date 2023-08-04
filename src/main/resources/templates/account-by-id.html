@@ -78,7 +78,7 @@
           <option value=">" th:selected="${OSdto.transactionSumOT}=='>'">></option>
         </select>
         &ensp;
-        <input type="number" th:value="${OSdto.transactionSum == null} ? '' : ${OSdto.transactionSum}" placeholder="Enter a transaction sum" th:field="*{transactionSum}">
+        <input type="number" step="0.01" th:value="${OSdto.transactionSum == null} ? '' : ${OSdto.transactionSum}" placeholder="Enter a transaction sum" th:field="*{transactionSum}">
         <br>
 
         &ensp;Operation kind&ensp;

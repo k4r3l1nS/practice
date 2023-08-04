@@ -61,7 +61,7 @@
                     <option value=">" th:selected="${ASdto.balanceOT}=='>'">></option>
                 </select>
                 &ensp;
-                <input type="number" th:value="${ASdto.balance == null} ? '' : ${ASdto.balance}" placeholder="Enter a sum" th:field="*{balance}">
+                <input type="number" step="0.01" th:value="${ASdto.balance == null} ? '' : ${ASdto.balance}" placeholder="Enter a sum" th:field="*{balance}">
                 <br>
 
                 &ensp;Account name&ensp;
@@ -116,7 +116,7 @@
     <br>
 
     <br>
-    <h3 th:text="${accountListDto.isEmpty()} ? 'There are no accounts which belong to '+${accountListDto.commonInfo.getFullName()}+'!' : 'All accounts of '+${accountListDto.commonInfo.getFullName()}+':'"></h3>
+    <h3 th:text="${accountListDto.isEmpty()} ? (${ASdto.isEmpty()}? 'There are no accounts which belong to '+${accountListDto.commonInfo.getFullName()}+'!' : 'There are no accounts according to filter which belong to '+${accountListDto.commonInfo.getFullName()}+'!') : 'All accounts of '+${accountListDto.commonInfo.getFullName()}+':'"></h3>
 
     <span th:if="${accountListDto.isEmpty()} == false">
         <br>

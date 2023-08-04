@@ -11,40 +11,37 @@ public class SpecificationImpl<T> implements Specification<T> {
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-        if (condition.getRightOperand() == null)
-            return root.get(condition.getPath()).isNull();
-
         switch (condition.getOperation()) {
 
             case EQUALS: {
 
-                return criteriaBuilder.equal(root.get(condition.getPath()).as(condition.getRightOperand().get(0).getClass()),
-                        condition.getRightOperand().get(0));
+                return criteriaBuilder.equal(root.get(condition.getFieldName()).as(condition.getValue().getClass()),
+                        condition.getValue());
             }
 
             case LESS:
 
-                return criteriaBuilder.lessThan(root.get(condition.getPath()).as(condition.getRightOperand().get(0).getClass()),
-                        condition.getRightOperand().get(0));
+                return criteriaBuilder.lessThan(root.get(condition.getFieldName()).as(condition.getValue().getClass()),
+                        condition.getValue());
 
             case GREATER:
-                return criteriaBuilder.greaterThan(root.get(condition.getPath()).as(condition.getRightOperand().get(0).getClass()),
-                        condition.getRightOperand().get(0));
+                return criteriaBuilder.greaterThan(root.get(condition.getFieldName()).as(condition.getValue().getClass()),
+                        condition.getValue());
 
             case IN: {
 
-                Predicate predicate = root.get(condition.getPath())
-                        .as(condition.getRightOperand().get(0).getClass()).in(condition.getRightOperand());
+                Predicate predicate = root.get(condition.getFieldName())
+                        .as(condition.getValues().get(0).getClass()).in(condition.getValues());
 
-                if (condition.getRightOperand().contains(null))
-                    return criteriaBuilder.or(predicate, root.get(condition.getPath()).isNull());
+                if (condition.getValues().contains(null))
+                    return criteriaBuilder.or(predicate, root.get(condition.getFieldName()).isNull());
 
                 return predicate;
             }
 
             case BEGINS_WITH: {
 
-                return criteriaBuilder.like(root.get(condition.getPath()).as(String.class), condition.getRightOperand().get(0).toString() + "%");
+                return criteriaBuilder.like(root.get(condition.getFieldName()).as(String.class), condition.getValue().toString() + "%");
             }
 
             default:

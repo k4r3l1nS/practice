@@ -78,7 +78,7 @@
                         <option value=">" th:selected="${CSdto.getNumberOfAccountsOT()}=='>'">></option>
                     </select>
                         &ensp;
-                    <input type="number" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
+                    <input type="number" step="0.01" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
                     <br>
 
                     &ensp;Registrarion date&ensp;
@@ -88,7 +88,7 @@
                         <option value=">" th:selected="${CSdto.getRegistrationDateOT()}=='>'">after</option>
                     </select>
                     &ensp;
-                    <input type="datetime-local" th:value="${CSdto.getRegistrationDate() == null} ? '' : ${CSdto.getRegistrationDate()}" placeholder="Enter registration date" th:field="*{registrationDate}">
+                    <input type="datetime-local" th:value="${CSdto.getRegistrationDate() == null} ? '' : ${CSdto.getRegistrationDate()}" th:field="*{registrationDate}">
                     <br>
 
                     &ensp;Birth date&ensp;
@@ -109,7 +109,7 @@
 
     <br>
     <br>
-    <h3 th:text="${clients.isEmpty()} ? 'There are no clients!' : 'Clients list:'"></h3>
+    <h3 th:text="${clients.isEmpty()} ? (${CSdto.isEmpty()}? 'There are no clients!' : 'There are no clients according to filter!') : 'Clients list:'"></h3>
     <br>
 
     <span th:if="${clients.isEmpty()} == false">

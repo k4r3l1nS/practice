@@ -1,6 +1,7 @@
 package com.practice.demo.models.specification;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,14 +11,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Condition {
 
-    private final String path;
-    private final List<Comparable> rightOperand;
+    private final String fieldName;
+
+    private final Comparable value;
+    private final List<Comparable> values;
+
     private final OperationType operation;
+
     private LogicalOperatorType logicalOperator;
 
     @Getter
