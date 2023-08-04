@@ -78,7 +78,7 @@
                         <option value=">" th:selected="${CSdto.getNumberOfAccountsOT()}=='>'">></option>
                     </select>
                         &ensp;
-                    <input type="number" step="0.01" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
+                    <input type="number" th:value="${CSdto.getNumberOfAccounts() == null} ? '' : ${CSdto.getNumberOfAccounts()}" placeholder="Enter number of accounts" th:field="*{numberOfAccounts}">
                     <br>
 
                     &ensp;Registrarion date&ensp;
