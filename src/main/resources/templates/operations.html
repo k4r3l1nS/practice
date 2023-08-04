@@ -172,7 +172,7 @@
 
 
         <div th:each="operation : ${operationListDto.getOperations()}">
-            <h4 th:text="${operation.operationDateTime.getDayOfMonth()}+' '+${operation.operationDateTime.getMonth().toString()}+' '+${operation.operationDateTime.getYear()}+' '+${operation.operationDateTime.getHour()}+':'+${operation.operationDateTime.getMinute()}+':'+${operation.operationDateTime.getSecond()}+':'"></h4>
+            <h4 th:text="${operation.operationDateTime.getDayOfMonth()}+' '+${operation.operationDateTime.getMonth().toString()}+' '+${operation.operationDateTime.getYear()}+' '+${operation.operationDateTime.getHour()}+':'+${operation.operationDateTime.getMinute()}+':'+${operation.operationDateTime.getSecond()}+' (id = '+${operation.operationId}+'):'"></h4>
 
             <h5 th:text="'Main operation: '+${operation.operationKind.name().toLowerCase()}"></h5>
             <h5 th:text="'Transaction sum: '+${operation.transactionSum}+' '+${operation.currencyFrom}"></h5>

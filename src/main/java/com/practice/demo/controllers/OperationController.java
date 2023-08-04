@@ -45,7 +45,7 @@ public class OperationController {
         model.addAttribute("operationKinds", Operation.OperationKind.values());
         model.addAttribute("currencies", Currency.values());
 
-        return "account-by-id";
+        return "operations";
     }
 
     @GetMapping("/clients/{client_id}/account-{account_id}/operation-{operation_id}")

@@ -41,7 +41,7 @@ public class AccountController {
         model.addAttribute("accountListDto", accountListDto);
         model.addAttribute("currencies", Currency.values());
 
-        return "client-by-id";
+        return "accounts";
     }
 
     @GetMapping("/clients/{id}/new-account")
