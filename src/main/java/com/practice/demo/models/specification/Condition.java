@@ -1,6 +1,5 @@
 package com.practice.demo.models.specification;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +33,7 @@ public class Condition {
         IN ("in"),
         BEGINS_WITH("begins with");
 
-        private String name;
+        private final String name;
 
         private final static Map<String, OperationType> _map;
 
@@ -54,6 +53,6 @@ public class Condition {
 
     public enum LogicalOperatorType {
 
-        AND, OR, END;
+        AND, OR, END
     }
 }

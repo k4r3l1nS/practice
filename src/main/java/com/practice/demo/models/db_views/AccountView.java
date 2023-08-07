@@ -1,6 +1,7 @@
 package com.practice.demo.models.db_views;
 
 import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.entities.Account;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -35,6 +36,10 @@ public class AccountView {
 
     @Column(name = "balance")
     private Double balance;
+
+    @Enumerated
+    @Column(name = "account_kind")
+    private Account.AccountKind accountKind;
 
     @Enumerated
     @Column(name = "currency")

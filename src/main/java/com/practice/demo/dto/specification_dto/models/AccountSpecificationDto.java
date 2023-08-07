@@ -2,6 +2,7 @@ package com.practice.demo.dto.specification_dto.models;
 
 import com.practice.demo.dto.specification_dto.SpecificationDto;
 import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.specification.Condition;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,24 +23,27 @@ public class AccountSpecificationDto implements SpecificationDto {
     public final static String DEFAULT_CURRENCY_OPERATION_TYPE = "=";
     public final static String DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE = "=";
     public final static String DEFAULT_LATEST_OPERATION_OPERATION_TYPE = ">";
+    public final static String DEFAULT_ACCOUNT_KIND_OPERATION_TYPE = ">";
 
     private String accountName;
     private Double balance;
     private Currency currency;
     private Integer numberOfOperations;
     private LocalDateTime latestOperation;
+    private Account.AccountKind accountKind;
 
     private String accountNameOT;
     private String balanceOT;
     private String currencyOT;
     private String numberOfOperationsOT;
     private String latestOperationOT;
+    private String accountKindOT;
 
     @Override
     public boolean isEmpty() {
 
-        return (accountName == null || accountName.isEmpty()) && balance == null &&
-                currency == null && numberOfOperations == null && latestOperation == null;
+        return (accountName == null || accountName.isEmpty()) && balance == null && currency == null &&
+                numberOfOperations == null && latestOperation == null && accountKind == null;
     }
 
     @Override
@@ -92,6 +96,14 @@ public class AccountSpecificationDto implements SpecificationDto {
                     .build());
         }
 
+        if (accountKind != null) {
+
+            conditions.add(Condition.builder()
+                    .fieldName("accountKind").operation(Condition.OperationType.resolveByName(accountKindOT))
+                    .value(accountKind).logicalOperator(Condition.LogicalOperatorType.AND)
+                    .build());
+        }
+
         conditions.get(conditions.size() - 1).setLogicalOperator(Condition.LogicalOperatorType.END);
 
         return conditions;
@@ -130,5 +142,8 @@ public class AccountSpecificationDto implements SpecificationDto {
 
         if (balanceOT == null)
             balanceOT = DEFAULT_BALANCE_OPERATION_TYPE;
+
+        if (accountKindOT == null)
+            accountKindOT = DEFAULT_ACCOUNT_KIND_OPERATION_TYPE;
     }
 }

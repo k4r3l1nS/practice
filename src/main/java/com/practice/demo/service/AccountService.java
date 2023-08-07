@@ -13,8 +13,7 @@ import com.practice.demo.models.specification.Condition;
 import com.practice.demo.models.specification.SpecificationBuilder;
 import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.ClientRepository;
-import com.practice.demo.repos.entity_repos.OperationRepository;
-import com.practice.demo.repos.db_view_repos.AccountViewRepositoty;
+import com.practice.demo.repos.db_view_repos.AccountViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class AccountService {
     private final ClientRepository clientRepository;
 
     private final AccountRepository accountRepository;
-    private final AccountViewRepositoty accountViewRepositoty;
+    private final AccountViewRepository accountViewRepository;
 
     public void addAccount(AccountDto accountDto, Long clientId)
             throws AccountNameAlreadyTakenException, InvalidSumInputException, EmptyFieldException {
@@ -82,9 +81,9 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public AccountView findAccountById(Long accountId) {
+    public AccountView findAccountViewById(Long accountId) {
 
-        return accountRepository.findAccountViewById(accountId);
+        return accountViewRepository.findAccountViewById(accountId);
     }
 
     public void deactivateAccountById(Long accountId) {
@@ -105,7 +104,7 @@ public class AccountService {
         var specification = new SpecificationBuilder<>().with(conditions).build();
         var pageRequest = pagingAndSortingDto.toPageRequest();
 
-        return accountViewRepositoty.findAll(specification, pageRequest);
+        return accountViewRepository.findAll(specification, pageRequest);
     }
 
     public AccountView findOneAccountView(Long clientId) {
@@ -121,7 +120,7 @@ public class AccountService {
                         .build())
                 .build();
 
-        List<AccountView> accountView =  accountViewRepositoty.findAll(specification);
+        List<AccountView> accountView =  accountViewRepository.findAll(specification);
 
         return accountView.get(0);
     }

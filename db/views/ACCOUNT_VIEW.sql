@@ -10,6 +10,7 @@ select
     a.currency,
     a.is_active,
     o.number_of_operations,
+    a.account_kind,
     o.latest_operation
 from client c
 left join account a on c.id = a.client_id

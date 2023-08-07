@@ -17,44 +17,50 @@ import java.util.stream.Stream;
 @Entity
 @Table(name = "operations")
 public class Operation {
+
+    /**
+     * Unique operation id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * Account entity which operation is related to
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
+    /**
+     * Operation kind: withdrawal, deposit or capitalization
+     */
     @Column(name = "operation_kind")
     @Enumerated
     private OperationKind operationKind;
 
+    /**
+     * Sum to be transacted
+     */
     @Column(name = "transaction_sum")
     private Double transactionSum;
 
+    /**
+     * Operation date & time
+     */
     @Column(name = "operation_date")
     private LocalDateTime operationDateTime;
 
+    /**
+     * Currency of transaction sum
+     */
     @Enumerated
     @Column(name = "currency_from")
     private Currency currencyFrom;
 
-    public Operation() {
-
-        this.operationDateTime = LocalDateTime.now();
-    }
-
-    public static Operation getOperation(OperationKind operationKind, Double transactionSum, Currency currencyFrom) {
-
-        Operation operation = new Operation();
-
-        operation.setOperationKind(operationKind);
-        operation.setTransactionSum(transactionSum);
-        operation.setCurrencyFrom(currencyFrom);
-
-        return operation;
-    }
-
+    /**
+     * Nested class representing operation kind
+     */
     @Getter
     public enum OperationKind {
 
@@ -78,5 +84,32 @@ public class Operation {
 
             return _map.getOrDefault(name, null);
         }
+    }
+
+    /**
+     * No arguments constructor
+     */
+    public Operation() {
+
+        this.operationDateTime = LocalDateTime.now();
+    }
+
+    /**
+     * Configures operation entity by external data
+     *
+     * @param operationKind kind of operation: withdrawal or deposit
+     * @param transactionSum sum to be transacted
+     * @param currencyFrom currency of transaction sum
+     * @return operation entity
+     */
+    public static Operation getOperation(OperationKind operationKind, Double transactionSum, Currency currencyFrom) {
+
+        Operation operation = new Operation();
+
+        operation.setOperationKind(operationKind);
+        operation.setTransactionSum(transactionSum);
+        operation.setCurrencyFrom(currencyFrom);
+
+        return operation;
     }
 }

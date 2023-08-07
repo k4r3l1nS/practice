@@ -15,16 +15,27 @@
   <h2>Complete a form</h2>
   <br>
   <form th:action="'/clients/'+${account.clientId}+'/account-'+${account.accountId}+'/edit'" th:method="PUT" th:object="${accountDto}">
+
     <input name="_method" type="hidden" value="PUT" />
+
     <h4>1. Account name:</h4>
     <input type="text" th:field="*{accountName}" th:placeholder="${account.accountName}" th:value="${account.accountName}" class="form-control">
     <br>
+
     <h4>2. Currency:</h4>
     <div th:each="currency : ${currencies}">
       <input type="radio" th:id="${currency.getName()}" th:field="*{currency}" th:value="${currency.getName()}" th:checked="${currency.equals(account.currency)} ? true : false">
       <label th:for="${currency.getName()}" th:text="${currency.getName()}+' (coefficient = '+${rates[account.getCurrency().ordinal()][currency.ordinal()]+')'}"></label><br>
     </div>
     <br>
+
+    <h4>4. Kind:</h4>
+    <input type="radio" th:id="${accountKinds[0]}" th:field="*{accountKind}" th:value="${accountKinds[0]}">
+    <label th:for="${accountKinds[0]}" th:text="'Common'"></label><br>
+    <input type="radio" th:id="${accountKinds[1]}" th:field="*{accountKind}" th:value="${accountKinds[1]}">
+    <label th:for="${accountKinds[1]}" th:text="'Accumulative'"></label><br>
+    <br>
+
     <button type="submit" class="btn btn-success">Confirm</button>
     <a th:href="'/clients/'+${client_id}">
       <button type="button" class="btn btn-danger">Cancel</button>

@@ -1,7 +1,6 @@
 package com.practice.demo.repos.entity_repos;
 
 import com.practice.demo.models.entities.Account;
-import com.practice.demo.models.db_views.AccountView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,9 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
      boolean existsByName(String name);
 
-     @Query("select E from AccountView E where E.clientId=?1 and (E.isActive is null or E.isActive=true)")
-     List<AccountView> findAllAccountsByClientId(Long clientId);
-
-     @Query("select E from AccountView E where E.accountId=?1")
-     AccountView findAccountViewById(Long accountId);
+     @Query("select E from Account E where E.isActive = true and E.accountKind = 1")
+     List<Account> findActiveAccumulationAccounts();
 }

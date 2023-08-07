@@ -73,6 +73,19 @@
                 <input type="text" th:value="${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : ${ASdto.accountName}" placeholder="Enter account name" th:field="*{accountName}">
                 <br>
 
+                &ensp;Account kind&ensp;
+                <select th:field="*{accountKindOT}">
+                    <option value="=" selected="selected">=</option>
+                </select>
+                &ensp;
+                <select th:field="*{accountKind}">
+                    <option th:value="null" selected="selected">All</option>
+                    <span th:each="accKind : ${accountKinds}">
+                        <option th:value="${accKind}" th:text="${accKind.name().toLowerCase()}"></option>
+                    </span>
+                </select>
+                <br>
+
                 &ensp;Account currency&ensp;
                 <select th:field="*{currencyOT}">
                     <option value="=" selected="selected">=</option>
@@ -177,6 +190,7 @@
             <h5 th:text="'Balance: '+${account.getBalance()}+' '+${account.getCurrency().toString()}"></h5>
             <h5 th:text="'Latest operation: '+${account.getLatestOperation().getDayOfMonth()}+' '+${account.getLatestOperation().getMonth().toString()}+' '+${account.getLatestOperation().getYear()}+' '+${account.getLatestOperation().getHour()}+':'+${account.getLatestOperation().getMinute()}+':'+${account.getLatestOperation().getSecond()}"></h5>
             <h5 th:text="'Number of operations: '+${account.numberOfOperations}"></h5>
+            <h5 th:text="'Account kind: '+${account.accountKind.name}"></h5>
             <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/edit'">
                 <button type="button" class="btn btn-primary">Edit</button>
             </a>

@@ -6,6 +6,7 @@ import com.practice.demo.dto.paging_and_sotring_dto.models.AccountPagingAndSorti
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.models.currency_info.Currency;
 import com.practice.demo.models.currency_info.CurrencyRates;
+import com.practice.demo.models.entities.Account;
 import com.practice.demo.service.AccountService;
 import com.practice.demo.uri_handler.UriHandler;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,7 @@ public class AccountController {
 
         model.addAttribute("accountListDto", accountListDto);
         model.addAttribute("currencies", Currency.values());
+        model.addAttribute("accountKinds", Account.AccountKind.values());
 
         return "accounts";
     }
@@ -49,6 +51,7 @@ public class AccountController {
 
         model.addAttribute("client_id", clientId);
         model.addAttribute("currencies", Currency.values());
+        model.addAttribute("accountKinds", Account.AccountKind.values());
         model.addAttribute("accountDto", AccountDto.builder().build());
 
         return "new-account";
@@ -66,11 +69,12 @@ public class AccountController {
     public String editAccount(@PathVariable(value = "client_id") Long clientId,
                               @PathVariable(value = "account_id") Long accountId, Model model) {
 
-        var account = accountService.findAccountById(accountId);
+        var accountView = accountService.findAccountViewById(accountId);
 
-        model.addAttribute("account", account);
+        model.addAttribute("account", accountView);
         model.addAttribute("currencies", Currency.values());
         model.addAttribute("rates", new CurrencyRates().getRates());
+        model.addAttribute("accountKinds", Account.AccountKind.values());
         model.addAttribute("accountDto", AccountDto.builder().build());
 
         return "edit-account";

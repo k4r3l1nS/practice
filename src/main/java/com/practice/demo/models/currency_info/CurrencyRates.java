@@ -34,13 +34,21 @@ public class CurrencyRates {
 
             rates[i][i] = 1;
         }
-        rates[0][1] = 0.0112827;
-        rates[0][2] = 0.0102432;
-        rates[0][3] = 0.0795689;
+        rates[Currency.RUB.ordinal()][Currency.USD.ordinal()] = 0.0112827;
+        rates[Currency.RUB.ordinal()][Currency.EUR.ordinal()] = 0.0102432;
+        rates[Currency.RUB.ordinal()][Currency.CNY.ordinal()] = 0.0795689;
 
-        rates[1][2] = rates[0][2] / rates[0][1];
-        rates[1][3] = rates[0][3] / rates[0][1];
-        rates[2][3] = rates[0][3] / rates[0][2];
+        rates[Currency.USD.ordinal()][Currency.EUR.ordinal()] =
+                rates[Currency.RUB.ordinal()][Currency.EUR.ordinal()] /
+                        rates[Currency.RUB.ordinal()][Currency.USD.ordinal()];
+
+        rates[Currency.USD.ordinal()][Currency.CNY.ordinal()] =
+                rates[Currency.RUB.ordinal()][Currency.CNY.ordinal()] /
+                        rates[Currency.RUB.ordinal()][Currency.USD.ordinal()];
+
+        rates[Currency.EUR.ordinal()][Currency.CNY.ordinal()] =
+                rates[Currency.RUB.ordinal()][Currency.CNY.ordinal()] /
+                        rates[Currency.RUB.ordinal()][Currency.EUR.ordinal()];
 
         for (int i = 1; i < NUMBER_OF_SUPPORTED_CURRENCIES; ++i) {
 

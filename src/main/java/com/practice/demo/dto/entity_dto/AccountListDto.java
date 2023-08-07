@@ -2,6 +2,7 @@ package com.practice.demo.dto.entity_dto;
 
 import com.practice.demo.models.db_views.AccountView;
 import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.entities.Account;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
@@ -40,6 +41,8 @@ public class AccountListDto {
         private Integer numberOfOperations;
 
         private LocalDateTime latestOperation;
+
+        private Account.AccountKind accountKind;
     }
 
     public boolean isEmpty() {
@@ -62,6 +65,7 @@ public class AccountListDto {
                         .balance(accountView.getBalance()).currency(accountView.getCurrency())
                         .numberOfOperations(accountView.getNumberOfOperations())
                         .latestOperation(accountView.getLatestOperation())
+                        .accountKind(accountView.getAccountKind())
                         .build());
 
         accountListDto.setAccounts(accountInfoPage);
