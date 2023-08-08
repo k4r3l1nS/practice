@@ -1,11 +1,11 @@
 package com.practice.demo.service;
 
 import com.practice.demo.dto.entity_dto.AccountDto;
+import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
-import com.practice.demo.exceptions.models.AccountNameAlreadyTakenException;
-import com.practice.demo.exceptions.models.EmptyFieldException;
-import com.practice.demo.exceptions.models.InvalidSumInputException;
+import com.practice.demo.exceptions.models.*;
+import com.practice.demo.models.currency_info.CurrencyRates;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.AccountView;
@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class AccountService {
         }
 
         if (accountRepository.existsByName(accountDto.getAccountName())
-                && accountRepository.findAccountByName(accountDto.getAccountName()).isActive()) {
+                && accountRepository.findByName(accountDto.getAccountName()).isActive()) {
 
             throw new AccountNameAlreadyTakenException("This account name is already taken");
         }
@@ -64,8 +65,8 @@ public class AccountService {
 
     public void updateAccount(AccountDto accountDto, Long accountId) {
 
-        if (accountRepository.findAccountByName(accountDto.getAccountName()) != null
-                && accountRepository.findAccountByName(accountDto.getAccountName()).isActive()) {
+        if (accountRepository.existsByName(accountDto.getAccountName())
+                && accountRepository.findByName(accountDto.getAccountName()).isActive()) {
 
             throw new AccountNameAlreadyTakenException("This account name is already taken");
         }
@@ -123,5 +124,48 @@ public class AccountService {
         List<AccountView> accountView =  accountViewRepository.findAll(specification);
 
         return accountView.get(0);
+    }
+
+    public void transferBetweenAccounts(TransferBetweenAccountsDto transferBetweenAccountsDto, Long clientId) {
+
+        if (transferBetweenAccountsDto.hasEmptyFields()) {
+
+            throw new EmptyFieldException("All fields and radio buttons must be filled in");
+        }
+
+        Account accountFrom = accountRepository
+                .findByNameAndClientId(transferBetweenAccountsDto.getAccountFromName(), clientId);
+        Account accountTo = accountRepository.findByName(transferBetweenAccountsDto.getAccountToName());
+
+        if (accountFrom == null) {
+
+            RuntimeException exception = accountRepository.existsByName(transferBetweenAccountsDto.getAccountFromName()) ?
+                    new ForbiddenResourceException("This account does not belong to client (id = " + clientId + ")") :
+                    new ResourceNotFoundException("Could not find account to withdraw money from");
+
+            throw exception;
+        }
+
+        if (accountTo == null) {
+
+            throw new ResourceNotFoundException("Could not find account to transfer money to");
+        }
+
+        if (!accountFrom.isEnoughMoney(transferBetweenAccountsDto.getTransactionSum(),
+                transferBetweenAccountsDto.getCurrency())) {
+
+            throw new NotEnoughMoneyException("Not enough money on account");
+        }
+
+        if (!accountFrom.getId().equals(accountTo.getId())) {
+
+            var withdrawalOperation = Operation.getOperation(Operation.OperationKind.WITHDRAWAL,
+                    transferBetweenAccountsDto.getTransactionSum(), transferBetweenAccountsDto.getCurrency());
+            var depositOperation = Operation.getOperation(Operation.OperationKind.DEPOSIT,
+                    transferBetweenAccountsDto.getTransactionSum(), transferBetweenAccountsDto.getCurrency());
+
+            accountFrom.addOperation(withdrawalOperation);
+            accountTo.addOperation(depositOperation);
+        }
     }
 }

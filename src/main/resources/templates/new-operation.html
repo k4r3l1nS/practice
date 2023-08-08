@@ -11,26 +11,31 @@
     <h2>Complete a form</h2>
     <form th:action="'/clients/'+${client_id}+'/account-'+${account_id}+'/new-operation'" method="post" th:object="${operationDto}">
       <br>
+
       <h4>1. Operation type</h4>
       <input type="radio" id="deposit" th:field="*{operationKind}" th:value="${operationKinds[0]}" th:checked="true">
       <label for="deposit">Deposit</label><br>
       <input type="radio" id="withdrawal" th:field="*{operationKind}" th:value="${operationKinds[1]}">
       <label for="withdrawal">Withdrawal</label><br>
       <br>
+
       <h4>2. Sum</h4>
       <input type="number" step="0.01" th:field="*{transactionSum}" placeholder="Enter an amount of money" class="form-control">
       <br>
+
       <h4>3. Currency:</h4>
       <div th:each="currency : ${currencies}">
         <input type="radio" th:id="${currency}" th:field="*{currencyFrom}" th:value="${currency}" th:checked="${currency.equals(currencies[0]) ? true : false}">
         <label th:for="${currency.getName()}" th:text="${currency.getName()}"></label><br>
       </div>
       <br>
+
       <button type="submit" class="btn btn-success">Confirm</button>
       <a th:href="'/clients/'+${client_id}+'/account-'+${account_id}">
         <button type="button" class="btn btn-danger">Cancel</button>
       </a>
       <button type="reset" class="btn btn-primary">Reset</button>
+
     </form>
   </div>
 </body>

@@ -50,4 +50,16 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorInformation> catchResourceNotFoundException(ResourceNotFoundException ex) {
+
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.NOT_FOUND.value(), ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorInformation> catchForbiddenResourceException(ForbiddenResourceException ex) {
+
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.FORBIDDEN.value(), ex.getMessage()), HttpStatus.FORBIDDEN);
+    }
 }

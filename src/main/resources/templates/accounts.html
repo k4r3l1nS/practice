@@ -9,10 +9,14 @@
     <header th:insert="blocks/header :: header"></header>
     <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
-    <h3>Click the following button to add new account:</h3>
+    <h3>Client menu:</h3>
     <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/new-account'">
-        <button class="btn btn-success"><h5>Add</h5></button>
+        <button class="btn btn-success"><h6>Add account</h6></button>
     </a>
+    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/transfer'">
+        <button class="btn btn-primary"><h6>Transfer money</h6></button>
+    </a>
+
     <br>
     <br>
     <br>

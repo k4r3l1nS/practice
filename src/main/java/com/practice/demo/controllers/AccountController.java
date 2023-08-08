@@ -2,6 +2,7 @@ package com.practice.demo.controllers;
 
 import com.practice.demo.dto.entity_dto.AccountDto;
 import com.practice.demo.dto.entity_dto.AccountListDto;
+import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.paging_and_sotring_dto.models.AccountPagingAndSortingDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.models.currency_info.Currency;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 @Controller
 @RequiredArgsConstructor
@@ -95,6 +98,26 @@ public class AccountController {
                                  @PathVariable(value = "account_id") Long accountId) {
 
         accountService.deactivateAccountById(accountId);
+
+        return "redirect:/clients/{client_id}";
+    }
+
+    @GetMapping("/clients/{client_id}/transfer")
+    public String newTransfer(@PathVariable(value = "client_id") Long clientId, Model model) {
+
+        model.addAttribute("currencies", Currency.values());
+        model.addAttribute("transferDto", TransferBetweenAccountsDto.builder().build());
+
+
+        return "transfer-between-accounts";
+    }
+
+    @PostMapping("/clients/{client_id}/transfer")
+    public String transferBetweenAccounts(@PathVariable(value = "client_id") Long clientId,
+                                          @ModelAttribute TransferBetweenAccountsDto transferBetweenAccountsDto,
+                                          Model model) {
+
+        accountService.transferBetweenAccounts(transferBetweenAccountsDto, clientId);
 
         return "redirect:/clients/{client_id}";
     }

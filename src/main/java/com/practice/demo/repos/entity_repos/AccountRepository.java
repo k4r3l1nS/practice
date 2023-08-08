@@ -10,9 +10,11 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-     Account findAccountByName(String accountName);
+     Account findByName(String accountName);
 
-     boolean existsByName(String name);
+     Account findByNameAndClientId(String accountName, Long clientId);
+
+     boolean existsByName(String accountName);
 
      @Query("select E from Account E where E.isActive = true and E.accountKind = 1")
      List<Account> findActiveAccumulationAccounts();

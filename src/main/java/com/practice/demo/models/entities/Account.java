@@ -115,6 +115,17 @@ public class Account {
     }
 
     /**
+     * Checks if last capitalization is overdue
+     *
+     * @param capitalizationIntervalInMs interval between capitalization operations
+     * @return whether if overdue or not
+     */
+    public boolean capitalizationIsOverdue(long capitalizationIntervalInMs) {
+
+        return Duration.between(lastCapitalization, LocalDateTime.now()).toMillis() >= capitalizationIntervalInMs;
+    }
+
+    /**
      * Adds capitalization operation to account
      */
     public void capitalize() {
@@ -143,10 +154,7 @@ public class Account {
 
             case WITHDRAWAL -> {
 
-                double withdrawalSum = new CurrencyRates().convert(
-                        operation.getCurrencyFrom(), currency, operation.getTransactionSum());
-
-                if (balance < withdrawalSum) {
+                if (!isEnoughMoney(operation.getTransactionSum(), operation.getCurrencyFrom())) {
 
                     throw new NotEnoughMoneyException("There is not enough money on balance");
                 }
@@ -176,5 +184,17 @@ public class Account {
 
         return Math.pow(accountKind.ACCUMULATION_COEFFICIENT_PER_YEAR,
                 (double)intervalInSeconds / secondsInYear) - 1;
+    }
+
+    /**
+     * Checks if there is enough money on balance
+     *
+     * @param sum withdrawal sum
+     * @param currency withdrawal currency
+     * @return whether if enough money or not
+     */
+    public boolean isEnoughMoney(Double sum, Currency currency) {
+
+        return balance >= new CurrencyRates().convert(currency, this.currency, sum);
     }
 }
