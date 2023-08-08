@@ -34,7 +34,8 @@ public class AccountService {
     private final AccountViewRepository accountViewRepository;
 
     public void addAccount(AccountDto accountDto, Long clientId)
-            throws AccountNameAlreadyTakenException, InvalidSumInputException, EmptyFieldException {
+            throws AccountNameAlreadyTakenException,
+            InvalidSumInputException, EmptyFieldException, ResourceNotFoundException {
 
         if (accountDto.hasEmptyFields()) {
 
@@ -52,7 +53,8 @@ public class AccountService {
             throw new InvalidSumInputException("First deposit is mandatory and must be above 0");
         }
 
-        var client = clientRepository.findById(clientId).orElseThrow();
+        var client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
         var account = accountDto.toEntity();
 
         account.addOperation(Operation.getOperation(Operation.OperationKind.DEPOSIT,
@@ -71,14 +73,16 @@ public class AccountService {
             throw new AccountNameAlreadyTakenException("This account name is already taken");
         }
 
-        var accountEntity = accountRepository.findById(accountId).orElseThrow();
+        var accountEntity = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
 
         accountDto.mapTo(accountEntity);
     }
 
     public Account findById(Long accountId) {
 
-        return accountRepository.findById(accountId).orElseThrow();
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
     }
 
     @Transactional(readOnly = true)
@@ -89,7 +93,8 @@ public class AccountService {
 
     public void deactivateAccountById(Long accountId) {
 
-        var account = accountRepository.findById(accountId).orElseThrow();
+        var account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
 
         account.setActive(false);
         account.setBalance(0.0);

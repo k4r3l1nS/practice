@@ -5,6 +5,7 @@ import com.practice.demo.dto.specification_dto.models.ClientSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.models.ClientPagingAndSortingDto;
 import com.practice.demo.exceptions.models.ClientAlreadyExistsException;
 import com.practice.demo.exceptions.models.EmptyFieldException;
+import com.practice.demo.exceptions.models.ResourceNotFoundException;
 import com.practice.demo.models.entities.Client;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.specification.SpecificationBuilder;
@@ -31,7 +32,8 @@ public class ClientService {
     @Transactional(readOnly = true)
     public Client findById(Long clientId) {
 
-        return clientRepository.findById(clientId).orElseThrow();
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
     }
 
 
@@ -78,21 +80,24 @@ public class ClientService {
 
     public void updateClient(ClientDto clientDto, Long clientId) {
 
-        var clientEntity = clientRepository.findById(clientId).orElseThrow();
+        var clientEntity = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
 
         clientDto.mapTo(clientEntity);
     }
 
     public void activateClientById(Long clientId) {
 
-        var clientEntity = clientRepository.findById(clientId).orElseThrow();
+        var clientEntity = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
 
         clientEntity.setActive(true);
     }
 
     public void deactivateClientById(Long clientId) {
 
-        var clientEntity = clientRepository.findById(clientId).orElseThrow();
+        var clientEntity = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
 
         clientEntity.setActive(false);
     }

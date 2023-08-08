@@ -5,6 +5,7 @@ import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
 import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
 import com.practice.demo.exceptions.models.EmptyFieldException;
 import com.practice.demo.exceptions.models.InvalidSumInputException;
+import com.practice.demo.exceptions.models.ResourceNotFoundException;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.specification.Condition;
@@ -42,7 +43,8 @@ public class OperationService {
             throw new InvalidSumInputException("Transaction sum must be above 0");
         }
 
-        var account = accountRepository.findById(accountId).orElseThrow();
+        var account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
 
         var operation = operationDto.toEntity();
         operationRepository.save(operation);
@@ -52,7 +54,8 @@ public class OperationService {
 
     public Operation findById(Long operationId) {
 
-        return operationRepository.findById(operationId).orElseThrow();
+        return operationRepository.findById(operationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Operation with id = " + operationId + " not found"));
     }
 
     public OperationView findOperationById(Long operationId) {
