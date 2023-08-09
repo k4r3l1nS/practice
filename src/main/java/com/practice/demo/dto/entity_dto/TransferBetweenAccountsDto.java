@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -12,7 +14,7 @@ public class TransferBetweenAccountsDto {
 
     private String accountFromName;
     private String accountToName;
-    private Double transactionSum;
+    private BigDecimal transactionSum;
     private Currency currency;
 
     public boolean hasEmptyFields() {

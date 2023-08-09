@@ -24,10 +24,7 @@
       <br>
 
       <h4>3. Currency:</h4>
-      <div th:each="currency : ${currencies}">
-        <input type="radio" th:id="${currency}" th:field="*{currencyFrom}" th:value="${currency}" th:checked="${currency.equals(currencies[0]) ? true : false}">
-        <label th:for="${currency.getName()}" th:text="${currency.getName()}"></label><br>
-      </div>
+      <input type="text" th:field="*{currencyFrom}" maxlength="3" minlength="3" placeholder="Enter a currency name" class="form-control">
       <br>
 
       <button type="submit" class="btn btn-success">Confirm</button>

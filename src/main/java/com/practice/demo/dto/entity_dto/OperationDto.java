@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -13,7 +15,7 @@ public class OperationDto {
 
     private Operation.OperationKind operationKind;
 
-    private Double transactionSum;
+    private BigDecimal transactionSum;
 
     private Currency currencyFrom;
 

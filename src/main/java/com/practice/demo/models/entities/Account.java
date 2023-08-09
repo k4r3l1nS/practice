@@ -2,12 +2,12 @@ package com.practice.demo.models.entities;
 
 import com.practice.demo.exceptions.models.NotEnoughMoneyException;
 import com.practice.demo.models.currency_info.Currency;
-import com.practice.demo.models.currency_info.CurrencyRates;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class Account {
      * Account balance
      */
     @Column(name = "balance")
-    private Double balance = 0.0;
+    private BigDecimal balance = BigDecimal.ZERO;
 
     /**
      * Account kind: accumulative or common
@@ -115,25 +115,16 @@ public class Account {
     }
 
     /**
-     * Checks if last capitalization is overdue
-     *
-     * @param capitalizationIntervalInMs interval between capitalization operations
-     * @return whether if overdue or not
-     */
-    public boolean capitalizationIsOverdue(long capitalizationIntervalInMs) {
-
-        return Duration.between(lastCapitalization, LocalDateTime.now()).toMillis() >= capitalizationIntervalInMs;
-    }
-
-    /**
      * Adds capitalization operation to account
      */
     public void capitalize() {
 
-        var operation = Operation.getOperation(Operation.OperationKind.DEPOSIT,
-                getPercentageCoefficient() * balance, currency);
+        var finalSum = getPercentageCoefficient().multiply(balance);
 
-        addOperation(operation);
+        var operation = Operation.getOperation(Operation.OperationKind.DEPOSIT,
+                finalSum, currency);
+
+        addOperation(operation, finalSum);
         lastCapitalization = LocalDateTime.now();
     }
 
@@ -143,24 +134,22 @@ public class Account {
      * @param operation operation entity
      * @throws NotEnoughMoneyException not enough money on balance
      */
-    public void addOperation(Operation operation) throws NotEnoughMoneyException {
+    public void addOperation(Operation operation, BigDecimal finalSum) throws NotEnoughMoneyException {
 
         Objects.requireNonNull(operation);
 
         switch (operation.getOperationKind()) {
 
-            case DEPOSIT -> balance += new CurrencyRates().convert(
-                    operation.getCurrencyFrom(), currency, operation.getTransactionSum());
+            case DEPOSIT -> balance = balance.add(finalSum);
 
             case WITHDRAWAL -> {
 
-                if (!isEnoughMoney(operation.getTransactionSum(), operation.getCurrencyFrom())) {
+                if (!isEnoughMoney(finalSum)) {
 
                     throw new NotEnoughMoneyException("There is not enough money on balance");
                 }
 
-                balance -= new CurrencyRates().convert(
-                        operation.getCurrencyFrom(), currency, operation.getTransactionSum());
+                balance = balance.subtract(finalSum);
             }
         }
 
@@ -173,7 +162,7 @@ public class Account {
      *
      * @return coefficient
      */
-    private Double getPercentageCoefficient() {
+    private BigDecimal getPercentageCoefficient() {
 
         if (!accountKind.equals(AccountKind.ACCUMULATIVE))
             return null;
@@ -182,19 +171,18 @@ public class Account {
                 .toMillis() / 1000);
         long secondsInYear = 31557600L;
 
-        return Math.pow(accountKind.ACCUMULATION_COEFFICIENT_PER_YEAR,
-                (double)intervalInSeconds / secondsInYear) - 1;
+        return BigDecimal.valueOf(Math.pow(accountKind.ACCUMULATION_COEFFICIENT_PER_YEAR,
+                (double)intervalInSeconds / secondsInYear) - 1);
     }
 
     /**
      * Checks if there is enough money on balance
      *
      * @param sum withdrawal sum
-     * @param currency withdrawal currency
      * @return whether if enough money or not
      */
-    public boolean isEnoughMoney(Double sum, Currency currency) {
+    public boolean isEnoughMoney(BigDecimal sum) {
 
-        return balance >= new CurrencyRates().convert(currency, this.currency, sum);
+        return balance.compareTo(sum) >= 0;
     }
 }

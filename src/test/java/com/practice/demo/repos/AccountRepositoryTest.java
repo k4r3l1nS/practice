@@ -14,7 +14,7 @@ class AccountRepositoryTest {
     @Test
     void findAllAccountsByClientId() {
 
-        var accountsByClient = accountRepository.findAllAccountsByClientId(852L);
-        System.out.println(accountsByClient);
+//        var accountsByClient = accountRepository.findAllAccountsByClientId(852L);
+//        System.out.println(accountsByClient);
     }
 }

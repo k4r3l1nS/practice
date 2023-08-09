@@ -7,14 +7,14 @@
 </head>
 <body>
   <header th:insert="blocks/header :: header"></header>
+  <h3 th:text="'Last update: ' + ${lastUpdate.getLastUpdate()}"></h3>
+  <br>
+
   <h3>All currency rates available at the market:</h3>
   <br>
-  <div th:each="row_param, row : ${rates}">
-    <div th:each="rate_param, rate : ${row.current}">
-      <span th:if="${row.index}!=${rate.index}">
-        <h4 th:text="${values[row.index].getName()}+'/'+${values[rate.index].getName()}+': '+${rates[row.index][rate.index]} "></h4>
-      </span>
-    </div>
+
+  <div th:each="rate : ${rates}">
+      <h5 th:text="${rate.currency}+' = '+${rate.value}+' RUB'"></h5>
   </div>
 
 </body>

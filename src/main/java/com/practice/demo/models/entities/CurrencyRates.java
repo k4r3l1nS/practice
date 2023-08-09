@@ -1,0 +1,33 @@
+package com.practice.demo.models.entities;
+
+import com.practice.demo.models.currency_info.Currency;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "currency_rates")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CurrencyRates {
+
+    /**
+     * Currency name
+     */
+    @Id
+    @Column(name = "char_code")
+    private String charCode;
+
+    @Enumerated
+    @Column(name = "currency")
+    private Currency currency;
+
+    /**
+     * Coefficient {CharCode} to RUB
+     */
+    @Column(name = "value")
+    private BigDecimal value;
+}

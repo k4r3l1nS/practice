@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Function;
@@ -43,7 +44,7 @@ public class Operation {
      * Sum to be transacted
      */
     @Column(name = "transaction_sum")
-    private Double transactionSum;
+    private BigDecimal transactionSum;
 
     /**
      * Operation date & time
@@ -102,7 +103,7 @@ public class Operation {
      * @param currencyFrom currency of transaction sum
      * @return operation entity
      */
-    public static Operation getOperation(OperationKind operationKind, Double transactionSum, Currency currencyFrom) {
+    public static Operation getOperation(OperationKind operationKind, BigDecimal transactionSum, Currency currencyFrom) {
 
         Operation operation = new Operation();
 

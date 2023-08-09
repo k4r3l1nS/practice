@@ -6,7 +6,6 @@ import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.paging_and_sotring_dto.models.AccountPagingAndSortingDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.models.currency_info.Currency;
-import com.practice.demo.models.currency_info.CurrencyRates;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.service.AccountService;
 import com.practice.demo.uri_handler.UriHandler;
@@ -15,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.security.auth.login.AccountNotFoundException;
 
 @Controller
 @RequiredArgsConstructor
@@ -76,7 +73,7 @@ public class AccountController {
 
         model.addAttribute("account", accountView);
         model.addAttribute("currencies", Currency.values());
-        model.addAttribute("rates", new CurrencyRates().getRates());
+//        model.addAttribute("rates", new CurrencyRatesOld().getRates());
         model.addAttribute("accountKinds", Account.AccountKind.values());
         model.addAttribute("accountDto", AccountDto.builder().build());
 

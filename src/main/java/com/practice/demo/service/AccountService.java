@@ -5,7 +5,7 @@ import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
 import com.practice.demo.exceptions.models.*;
-import com.practice.demo.models.currency_info.CurrencyRates;
+import com.practice.demo.models.currency_info.CurrencyConverter;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.AccountView;
@@ -19,7 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountNotFoundException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +32,8 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountViewRepository accountViewRepository;
+
+    private final CurrencyConverter currencyConverter;
 
     public void addAccount(AccountDto accountDto, Long clientId)
             throws AccountNameAlreadyTakenException,
@@ -48,7 +50,7 @@ public class AccountService {
             throw new AccountNameAlreadyTakenException("This account name is already taken");
         }
 
-        if (accountDto.getFirstDeposit() <= 0) {
+        if (accountDto.getBalance().compareTo(BigDecimal.ZERO) <= 0) {
 
             throw new InvalidSumInputException("First deposit is mandatory and must be above 0");
         }
@@ -58,7 +60,9 @@ public class AccountService {
         var account = accountDto.toEntity();
 
         account.addOperation(Operation.getOperation(Operation.OperationKind.DEPOSIT,
-                accountDto.getFirstDeposit(), account.getCurrency()));
+                accountDto.getBalance(), account.getCurrency()),
+                currencyConverter.convert(accountDto.getCurrency(),
+                        account.getCurrency(), accountDto.getBalance()));
 
         client.addAccount(account);
 
@@ -76,6 +80,8 @@ public class AccountService {
         var accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
 
+        accountDto.setBalance(currencyConverter.convert(accountEntity.getCurrency(),
+                accountDto.getCurrency(), accountEntity.getBalance()));
         accountDto.mapTo(accountEntity);
     }
 
@@ -97,7 +103,7 @@ public class AccountService {
                 .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
 
         account.setActive(false);
-        account.setBalance(0.0);
+        account.setBalance(BigDecimal.ZERO);
 
         //some type of withdrawal
     }
@@ -156,8 +162,8 @@ public class AccountService {
             throw new ResourceNotFoundException("Could not find account to transfer money to");
         }
 
-        if (!accountFrom.isEnoughMoney(transferBetweenAccountsDto.getTransactionSum(),
-                transferBetweenAccountsDto.getCurrency())) {
+        if (!accountFrom.isEnoughMoney(currencyConverter.convert(transferBetweenAccountsDto.getCurrency(),
+                accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()))) {
 
             throw new NotEnoughMoneyException("Not enough money on account");
         }
@@ -169,8 +175,12 @@ public class AccountService {
             var depositOperation = Operation.getOperation(Operation.OperationKind.DEPOSIT,
                     transferBetweenAccountsDto.getTransactionSum(), transferBetweenAccountsDto.getCurrency());
 
-            accountFrom.addOperation(withdrawalOperation);
-            accountTo.addOperation(depositOperation);
+            accountFrom.addOperation(withdrawalOperation,
+                    currencyConverter.convert(transferBetweenAccountsDto.getCurrency(), accountFrom.getCurrency(),
+                            transferBetweenAccountsDto.getTransactionSum()));
+            accountTo.addOperation(depositOperation,
+                    currencyConverter.convert(transferBetweenAccountsDto.getCurrency(), accountTo.getCurrency(),
+                            transferBetweenAccountsDto.getTransactionSum()));
         }
     }
 }

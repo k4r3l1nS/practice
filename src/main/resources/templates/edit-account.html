@@ -23,13 +23,10 @@
     <br>
 
     <h4>2. Currency:</h4>
-    <div th:each="currency : ${currencies}">
-      <input type="radio" th:id="${currency.getName()}" th:field="*{currency}" th:value="${currency.getName()}" th:checked="${currency.equals(account.currency)} ? true : false">
-      <label th:for="${currency.getName()}" th:text="${currency.getName()}+' (coefficient = '+${rates[account.getCurrency().ordinal()][currency.ordinal()]+')'}"></label><br>
-    </div>
+    <input type="text" th:field="*{currency}" maxlength="3" minlength="3" placeholder="Enter a currency name" class="form-control">
     <br>
 
-    <h4>4. Kind:</h4>
+    <h4>3. Kind:</h4>
     <input type="radio" th:id="${accountKinds[0]}" th:field="*{accountKind}" th:value="${accountKinds[0]}">
     <label th:for="${accountKinds[0]}" th:text="'Common'"></label><br>
     <input type="radio" th:id="${accountKinds[1]}" th:field="*{accountKind}" th:value="${accountKinds[1]}">

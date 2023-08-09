@@ -2,12 +2,12 @@ package com.practice.demo.dto.entity_dto;
 
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.currency_info.Currency;
-import com.practice.demo.models.currency_info.CurrencyRates;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +17,7 @@ public class AccountDto {
 
     private String accountName;
 
-    private Double firstDeposit;
+    private BigDecimal balance;
 
     private Currency currency;
 
@@ -46,11 +46,7 @@ public class AccountDto {
 
         if (currency != null) {
 
-            double[][] rates = new CurrencyRates().getRates();
-
-            accountEntity.setBalance(accountEntity.getBalance()
-                    * rates[accountEntity.getCurrency().ordinal()][currency.ordinal()]);
-
+            accountEntity.setBalance(balance);
             accountEntity.setCurrency(currency);
         }
 
@@ -64,7 +60,7 @@ public class AccountDto {
 
     public boolean hasEmptyFields() {
 
-        return accountName == null || accountName.isEmpty() || firstDeposit == null ||
+        return accountName == null || accountName.isEmpty() || balance == null ||
                 currency == null || accountKind == null;
     }
 }

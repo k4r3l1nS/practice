@@ -6,6 +6,7 @@ import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
 import com.practice.demo.exceptions.models.EmptyFieldException;
 import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.exceptions.models.ResourceNotFoundException;
+import com.practice.demo.models.currency_info.CurrencyConverter;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.specification.Condition;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class OperationService {
     private final OperationRepository operationRepository;
     private final OperationViewRepository operationViewRepository;
 
+    private final CurrencyConverter currencyConverter;
+
     public void addOperation(OperationDto operationDto, Long accountId)
             throws InvalidSumInputException, EmptyFieldException {
 
@@ -38,7 +42,7 @@ public class OperationService {
             throw new EmptyFieldException("All fields and radio buttons must be filled in");
         }
 
-        if (operationDto.getTransactionSum() <= 0) {
+        if (operationDto.getTransactionSum().compareTo(BigDecimal.ZERO) <= 0) {
 
             throw new InvalidSumInputException("Transaction sum must be above 0");
         }
@@ -47,9 +51,10 @@ public class OperationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
 
         var operation = operationDto.toEntity();
-        operationRepository.save(operation);
+        account.addOperation(operation, currencyConverter.convert(operation.getCurrencyFrom(),
+                account.getCurrency(), operation.getTransactionSum()));
 
-        account.addOperation(operation);
+        operationRepository.save(operation);
     }
 
     public Operation findById(Long operationId) {
