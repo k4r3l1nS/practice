@@ -19,7 +19,7 @@ public class AccountDto {
 
     private BigDecimal balance;
 
-    private Currency currency;
+    private String currency;
 
     private Account.AccountKind accountKind;
 
@@ -28,7 +28,7 @@ public class AccountDto {
         var account = new Account();
 
         account.setName(accountName);
-        account.setCurrency(currency);
+        account.setCurrency(Currency.resolveByName(currency));
         account.setAccountKind(accountKind);
 
         account.setLastCapitalization(accountKind.equals(Account.AccountKind.ACCUMULATIVE) ? LocalDateTime.now() : null);
@@ -47,7 +47,7 @@ public class AccountDto {
         if (currency != null) {
 
             accountEntity.setBalance(balance);
-            accountEntity.setCurrency(currency);
+            accountEntity.setCurrency(Currency.resolveByName(currency));
         }
 
         if (accountKind != null && accountEntity.getAccountKind() != accountKind) {

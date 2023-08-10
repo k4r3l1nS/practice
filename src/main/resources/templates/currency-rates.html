@@ -7,15 +7,41 @@
 </head>
 <body>
   <header th:insert="blocks/header :: header"></header>
+  <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
+
   <h3 th:text="'Last update: ' + ${lastUpdate.getLastUpdate()}"></h3>
   <br>
-
-  <h3>All currency rates available at the market:</h3>
   <br>
 
-  <div th:each="rate : ${rates}">
-      <h5 th:text="${rate.currency}+' = '+${rate.value}+' RUB'"></h5>
-  </div>
+  <h3>
+    Enter currencies to get rate:
+    <br>
+    <br>
+    <form th:action="'/currency-rates'" method="get" th:object="${CRSdto}">
+        <input type="text" maxlength="3" size="2" placeholder="FROM" th:value="${CRSdto.currencyFrom == null} ? '' : ${CRSdto.currencyFrom}" th:field="*{currencyFrom}">
+        &ensp;/&ensp;
+        <input type="text" maxlength="3" size="2" placeholder="TO" th:value="${CRSdto.currencyTo == null} ? '' : ${CRSdto.currencyTo}" th:field="*{currencyTo}">
+        &ensp;
+        <button type="submit">Confirm</button>
+    </form>
+  <br>
+      <span th:if="${rate != null}" th:text="'1 '+${CRSdto.currencyFrom.toUpperCase()}+' = '+${rate}+' '+${CRSdto.currencyTo.toUpperCase()}"></span>
+  </h3>
+
+  <br>
+  <span th:if="${rate != null}"><br></span>
+
+
+  <h3>All currencies available at the market:</h3>
+  <br>
+
+  <h4>
+    <span th:each="currency, index : ${currencies}">
+        <span th:text="${currency.name}"></span>
+        <span th:if="${index.count % 10 != 0 && index.count != index.size}">&nbsp;</span>
+        <span th:if="${index.count % 10 == 0 || index.count == index.size}"><br></span>
+    </span>
+  </h4>
 
 </body>
 </html>

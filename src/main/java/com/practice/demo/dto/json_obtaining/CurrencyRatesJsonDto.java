@@ -1,4 +1,4 @@
-package com.practice.demo.dto.currency_rates_dto;
+package com.practice.demo.dto.json_obtaining;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +12,7 @@ import java.util.Map;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CurrencyRatesDto {
+public class CurrencyRatesJsonDto {
 
     @JsonProperty(value = "Timestamp")
     private Timestamp timestamp;

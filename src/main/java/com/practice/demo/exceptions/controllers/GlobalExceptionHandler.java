@@ -12,54 +12,70 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchAccountNameAlreadyTakenException(AccountNameAlreadyTakenException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchUndefinedClientException(UndefinedClientException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchUnsupportedCurrencyException(UnsupportedCurrencyException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchClientAlreadyExistsException(ClientAlreadyExistsException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchNotEnoughMoneyException(NotEnoughMoneyException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchInvalidSumInputException(InvalidSumInputException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchEmptyRadioValueException(EmptyFieldException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchResourceNotFoundException(ResourceNotFoundException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.NOT_FOUND.value(), ex.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.NOT_FOUND.value(), ex.getMessage()),
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorInformation> catchForbiddenResourceException(ForbiddenResourceException ex) {
 
-        return new ResponseEntity<>(new ErrorInformation(HttpStatus.FORBIDDEN.value(), ex.getMessage()), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.FORBIDDEN.value(), ex.getMessage()),
+                HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorInformation> catchCurrencyNotSupportedException(CurrencyNotSupportedException ex) {
+
+        return new ResponseEntity<>(new ErrorInformation(HttpStatus.BAD_REQUEST.value(), ex.getMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 }

@@ -2,7 +2,7 @@ package com.practice.demo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.demo.dto.currency_rates_dto.CurrencyRatesDto;
+import com.practice.demo.dto.json_obtaining.CurrencyRatesJsonDto;
 import com.practice.demo.models.currency_info.Currency;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.CurrencyRates;
@@ -60,9 +60,9 @@ public class ScheduledService {
 
         String json = webClient.get().retrieve().bodyToMono(String.class).block();
 
-        CurrencyRatesDto currencyRatesDto = new ObjectMapper().readValue(json, CurrencyRatesDto.class);
+        CurrencyRatesJsonDto currencyRatesJsonDto = new ObjectMapper().readValue(json, CurrencyRatesJsonDto.class);
 
-        var currencyMap = currencyRatesDto.getValuteMap();
+        var currencyMap = currencyRatesJsonDto.getValuteMap();
 
         currencyMap.forEach((name, valute) -> {
 
@@ -86,16 +86,17 @@ public class ScheduledService {
         });
 
         var lastUbdateList = lastCurrencyRatesUpdateRepository.findAll();
+
         if (lastUbdateList.isEmpty()) {
 
             LastCurrencyRatesUpdate lastUpdate = new LastCurrencyRatesUpdate();
-            lastUpdate.setLastUpdate(currencyRatesDto.getTimestamp());
+            lastUpdate.setLastUpdate(currencyRatesJsonDto.getTimestamp());
 
             lastCurrencyRatesUpdateRepository.save(lastUpdate);
         }
         else {
 
-            lastUbdateList.get(0).setLastUpdate(currencyRatesDto.getTimestamp());
+            lastUbdateList.get(0).setLastUpdate(currencyRatesJsonDto.getTimestamp());
         }
     }
 }

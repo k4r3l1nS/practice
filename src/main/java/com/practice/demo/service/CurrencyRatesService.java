@@ -1,5 +1,9 @@
 package com.practice.demo.service;
 
+import com.practice.demo.dto.entity_dto.CurrencyRatesDto;
+import com.practice.demo.exceptions.models.CurrencyNotSupportedException;
+import com.practice.demo.exceptions.models.EmptyFieldException;
+import com.practice.demo.exceptions.models.ResourceNotFoundException;
 import com.practice.demo.models.currency_info.Currency;
 import com.practice.demo.models.entities.CurrencyRates;
 import com.practice.demo.models.entities.LastCurrencyRatesUpdate;
@@ -28,13 +32,43 @@ public class CurrencyRatesService {
         return coefficient.multiply(sum);
     }
 
-    public List<CurrencyRates> findAll() {
-
-        return currencyRatesRepository.findAll();
-    }
-
     public LastCurrencyRatesUpdate getLastUpdate() {
 
         return lastCurrencyRatesUpdateRepository.findAll().get(0);
+    }
+
+    public boolean existsByCharCode(String currencyName) {
+
+        return currencyRatesRepository.existsByCharCode(currencyName);
+    }
+
+    public BigDecimal findRate(CurrencyRatesDto currencyRatesDto) {
+
+        if (currencyRatesDto.isEmpty()) {
+
+            return null;
+        }
+
+        if (currencyRatesDto.hasOneEmptyField()) {
+
+            throw new EmptyFieldException("Please fill all fields or leave them empty");
+        }
+
+        String currencyFrom = currencyRatesDto.getCurrencyFrom();
+        String currencyTo = currencyRatesDto.getCurrencyTo();
+
+        var currencyFromEntity = currencyRatesRepository.findByCharCode(currencyFrom.toUpperCase());
+        var currencyToEntity = currencyRatesRepository.findByCharCode(currencyTo.toUpperCase());
+
+        if (currencyFrom != null && currencyFromEntity == null ||
+                currencyTo != null && currencyToEntity == null) {
+
+            String name = currencyFrom != null && currencyFromEntity == null ?
+                    currencyFrom : currencyTo;
+
+            throw new CurrencyNotSupportedException("Currency with name \"" + name + "\" is not supported");
+        }
+
+        return convert(currencyFromEntity.getCurrency(), currencyToEntity.getCurrency(), BigDecimal.ONE);
     }
 }
