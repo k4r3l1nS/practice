@@ -7,204 +7,207 @@
 </head>
 <body>
     <header th:insert="blocks/header :: header"></header>
-    <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
-    <h3>Client menu:</h3>
-    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/new-account'">
-        <button class="btn btn-success"><h6>Add account</h6></button>
-    </a>
-    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/transfer'">
-        <button class="btn btn-primary"><h6>Transfer money</h6></button>
-    </a>
+    <div class="container">
+        <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
-    <br>
-    <br>
-    <br>
+        <h3>Client menu:</h3>
+        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/new-account'">
+            <button class="btn btn-success"><h6>Add account</h6></button>
+        </a>
+        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/transfer'">
+            <button class="btn btn-primary"><h6>Transfer money</h6></button>
+        </a>
 
-    <h4>
-        <form th:action="'/clients/'+${accountListDto.commonInfo.clientId}" method="get" th:object="${PASdto}">
-            Sort by:&nbsp;
-            <span>
-                    <select th:field="*{sortBy}">
-                        <option value="balance" th:selected="${PASdto.sortBy}=='balance'">Balance</option>
-                        <option value="numberOfOperations" th:selected="${PASdto.sortBy}=='numberOfOperations'">Number of operations</option>
-                        <option value="latestOperation" th:selected="${PASdto.sortBy}=='latestOperation'">Latest operation</option>
-                        <option value="accountName" th:selected="${PASdto.sortBy}=='accountName'">Account name</option>
-                    </select>
-                </span>
-
-            &nbsp;Order:&nbsp;
-            <span>
-                    <select th:field="*{order}">
-                        <option value="ASC" th:selected="${PASdto.order}=='ASC'">Ascending ('A'-'Z')</option>
-                        <option value="DESC" th:selected="${PASdto.order}=='DESC'">Decreasing ('Z'-'A')</option>
-                    </select>
-                </span>
-
-            &ensp;Page size:
-            <span>
-                    <select th:field="*{size}">
-                        <option value="3" th:selected="${PASdto.size}==3">3</option>
-                        <option value="5" th:selected="${PASdto.size}==5">5</option>
-                        <option value="10" th:selected="${PASdto.size}==10">10</option>
-                        <option value="20" th:selected="${PASdto.size}==20">20</option>
-                        <option value="50" th:selected="${PASdto.size}==50">50</option>
-                    </select>
-                </span>
-            <br>
-
-            <div th:object="${ASdto}">
-                <br>
-                Filter:
-                <br>
-
-                &ensp;Balance&ensp;
-                <select th:field="*{balanceOT}">
-                    <option value="=" th:selected="${ASdto.balanceOT}=='='">=</option>
-                    <option value="<" th:selected="${ASdto.balanceOT}=='<'"><</option>
-                    <option value=">" th:selected="${ASdto.balanceOT}=='>'">></option>
-                </select>
-                &ensp;
-                <input type="number" step="0.01" th:value="${ASdto.balance == null} ? '' : ${ASdto.balance}" placeholder="Enter a sum" th:field="*{balance}">
-                <br>
-
-                &ensp;Account name&ensp;
-                <select th:field="*{accountNameOT}">
-                    <option value="=" th:selected="${ASdto.accountNameOT}=='='">=</option>
-                    <option value="begins with" th:selected="${ASdto.accountNameOT}=='begins with'">begins with</option>
-                </select>
-                &ensp;
-                <input type="text" th:value="${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : ${ASdto.accountName}" placeholder="Enter account name" th:field="*{accountName}">
-                <br>
-
-                &ensp;Account kind&ensp;
-                <select th:field="*{accountKindOT}">
-                    <option value="=" selected="selected">=</option>
-                </select>
-                &ensp;
-                <select th:field="*{accountKind}">
-                    <option th:value="null" selected="selected">All</option>
-                    <span th:each="accKind : ${accountKinds}">
-                        <option th:value="${accKind}" th:text="${accKind.name().toLowerCase()}"></option>
-                    </span>
-                </select>
-                <br>
-
-                &ensp;Account currency&ensp;
-                <select th:field="*{currencyOT}">
-                    <option value="=" selected="selected">=</option>
-                </select>
-                &ensp;
-                <select th:field="*{currency}">
-                    <option th:value="null" selected="selected">All</option>
-                    <span th:each="currency : ${currencies}">
-                        <option th:value="${currency}" th:text="${currency.name()}"></option>
-                    </span>
-                </select>
-                <br>
-
-                &ensp;Number of operations&ensp;
-                <select th:field="*{numberOfOperationsOT}">
-                    <option value="=" th:selected="${ASdto.numberOfOperationsOT}=='='">=</option>
-                    <option value="<" th:selected="${ASdto.numberOfOperationsOT}=='<'">before</option>
-                    <option value=">" th:selected="${ASdto.numberOfOperationsOT}=='>'">after</option>
-                </select>
-                &ensp;
-                <input type="number" th:value="${ASdto.numberOfOperations == null} ? '' : ${ASdto.numberOfOperations}" placeholder="Enter number of operations" th:field="*{numberOfOperations}">
-                <br>
-
-                &ensp;Latest operation&ensp;
-                <select th:field="*{latestOperationOT}">
-                    <option value="=" th:selected="${ASdto.latestOperationOT}=='='">=</option>
-                    <option value="<" th:selected="${ASdto.latestOperationOT}=='<'">before</option>
-                    <option value=">" th:selected="${ASdto.latestOperationOT}=='>'">after</option>
-                </select>
-                &ensp;
-                <input type="datetime-local" th:value="${ASdto.latestOperation == null} ? '' : ${ASdto.latestOperation}" th:field="*{latestOperation}">
-                <br>
-
-                <br>
-            </div>
-
-            <input type="submit" value="Confirm">
-            <input type="reset" value="Reset">
-        </form>
-    </h4>
-    <br>
-
-    <br>
-    <h3 th:text="${accountListDto.isEmpty()} ? (${ASdto.isEmpty()}? 'There are no accounts which belong to '+${accountListDto.commonInfo.getFullName()}+'!' : 'There are no accounts according to filter which belong to '+${accountListDto.commonInfo.getFullName()}+'!') : 'All accounts of '+${accountListDto.commonInfo.getFullName()}+':'"></h3>
-
-    <span th:if="${accountListDto.isEmpty()} == false">
         <br>
+        <br>
+        <br>
+
         <h4>
-        Pages:&ensp;
-                <span th:if="${PASdto.page}==0">
-                    <span th:text="${PASdto.page + 1}"></span>
-                    <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages()}">
-                        &nbsp;
-                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${PASdto.page + 2}"></a>
-                    </span>
-                    <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages() - 1}">
-                        <span th:if="${PASdto.page + 1}!=${accountListDto.accounts.getTotalPages()-2}">&ensp;...</span>
-                        &nbsp;
-                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${accountListDto.accounts.getTotalPages()}"></a>
-                    </span>
-                </span>
-                <span th:if="${PASdto.page}==${accountListDto.accounts.getTotalPages()-1} and ${accountListDto.accounts.getTotalPages()>1}">
-                    <span th:if="1 < ${accountListDto.accounts.getTotalPages()}">
-                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page=0&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})">1</a>
-                        &nbsp;
-                    </span>
-                    <span th:if="2 < ${accountListDto.accounts.getTotalPages()}">
-                        <span th:if="${accountListDto.accounts.getTotalPages() != 3}">...&ensp;</span>
-                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 2}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${accountListDto.accounts.getTotalPages() - 1}"></a>
-                        &nbsp;
-                    </span>
-                    <span th:text="${PASdto.page + 1}"></span>
-                </span>
-                <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${accountListDto.accounts.getTotalPages() - 1})">
-                    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page=0&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="'1'"></a>
-                    &nbsp;
-                    <span th:if="${PASdto.page} > 2">...&ensp;</span>
-
-                    <span th:if="${PASdto.page} > 1">
-                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page - 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${PASdto.page}"></a>
-                        &nbsp;
-                    </span>
-                    <span th:text="${PASdto.page+1}"></span>
-                    &nbsp;
-                    <span th:if="${accountListDto.accounts.getTotalPages()}-2 > ${PASdto.page}">
-                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${PASdto.page+2}"></a>
-                        &nbsp;
+            <form th:action="'/clients/'+${accountListDto.commonInfo.clientId}" method="get" th:object="${PASdto}">
+                Sort by:&nbsp;
+                <span>
+                        <select th:field="*{sortBy}">
+                            <option value="balance" th:selected="${PASdto.sortBy}=='balance'">Balance</option>
+                            <option value="numberOfOperations" th:selected="${PASdto.sortBy}=='numberOfOperations'">Number of operations</option>
+                            <option value="latestOperation" th:selected="${PASdto.sortBy}=='latestOperation'">Latest operation</option>
+                            <option value="accountName" th:selected="${PASdto.sortBy}=='accountName'">Account name</option>
+                        </select>
                     </span>
 
+                &nbsp;Order:&nbsp;
+                <span>
+                        <select th:field="*{order}">
+                            <option value="ASC" th:selected="${PASdto.order}=='ASC'">Ascending ('A'-'Z')</option>
+                            <option value="DESC" th:selected="${PASdto.order}=='DESC'">Decreasing ('Z'-'A')</option>
+                        </select>
+                    </span>
 
-                    <span th:if="${PASdto.page} < ${accountListDto.accounts.getTotalPages() - 3}">...&ensp;</span>
-                    <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages()-1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${accountListDto.accounts.getTotalPages()}"></a>
-                </span>
+                &ensp;Page size:
+                <span>
+                        <select th:field="*{size}">
+                            <option value="3" th:selected="${PASdto.size}==3">3</option>
+                            <option value="5" th:selected="${PASdto.size}==5">5</option>
+                            <option value="10" th:selected="${PASdto.size}==10">10</option>
+                            <option value="20" th:selected="${PASdto.size}==20">20</option>
+                            <option value="50" th:selected="${PASdto.size}==50">50</option>
+                        </select>
+                    </span>
+                <br>
+
+                <div th:object="${ASdto}">
+                    <br>
+                    Filter:
+                    <br>
+
+                    &ensp;Balance&ensp;
+                    <select th:field="*{balanceOT}">
+                        <option value="=" th:selected="${ASdto.balanceOT}=='='">=</option>
+                        <option value="<" th:selected="${ASdto.balanceOT}=='<'"><</option>
+                        <option value=">" th:selected="${ASdto.balanceOT}=='>'">></option>
+                    </select>
+                    &ensp;
+                    <input type="number" step="0.01" th:value="${ASdto.balance == null} ? '' : ${ASdto.balance}" placeholder="Enter a sum" th:field="*{balance}">
+                    <br>
+
+                    &ensp;Account name&ensp;
+                    <select th:field="*{accountNameOT}">
+                        <option value="=" th:selected="${ASdto.accountNameOT}=='='">=</option>
+                        <option value="begins with" th:selected="${ASdto.accountNameOT}=='begins with'">begins with</option>
+                    </select>
+                    &ensp;
+                    <input type="text" th:value="${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : ${ASdto.accountName}" placeholder="Enter account name" th:field="*{accountName}">
+                    <br>
+
+                    &ensp;Account kind&ensp;
+                    <select th:field="*{accountKindOT}">
+                        <option value="=" selected="selected">=</option>
+                    </select>
+                    &ensp;
+                    <select th:field="*{accountKind}">
+                        <option th:value="null" selected="selected">All</option>
+                        <span th:each="accKind : ${accountKinds}">
+                            <option th:value="${accKind}" th:text="${accKind.name().toLowerCase()}"></option>
+                        </span>
+                    </select>
+                    <br>
+
+                    &ensp;Account currency&ensp;
+                    <select th:field="*{currencyOT}">
+                        <option value="=" selected="selected">=</option>
+                    </select>
+                    &ensp;
+                    <select th:field="*{currency}">
+                        <option th:value="null" selected="selected">All</option>
+                        <span th:each="currency : ${currencies}">
+                            <option th:value="${currency}" th:text="${currency.name()}"></option>
+                        </span>
+                    </select>
+                    <br>
+
+                    &ensp;Number of operations&ensp;
+                    <select th:field="*{numberOfOperationsOT}">
+                        <option value="=" th:selected="${ASdto.numberOfOperationsOT}=='='">=</option>
+                        <option value="<" th:selected="${ASdto.numberOfOperationsOT}=='<'">before</option>
+                        <option value=">" th:selected="${ASdto.numberOfOperationsOT}=='>'">after</option>
+                    </select>
+                    &ensp;
+                    <input type="number" th:value="${ASdto.numberOfOperations == null} ? '' : ${ASdto.numberOfOperations}" placeholder="Enter number of operations" th:field="*{numberOfOperations}">
+                    <br>
+
+                    &ensp;Latest operation&ensp;
+                    <select th:field="*{latestOperationOT}">
+                        <option value="=" th:selected="${ASdto.latestOperationOT}=='='">=</option>
+                        <option value="<" th:selected="${ASdto.latestOperationOT}=='<'">before</option>
+                        <option value=">" th:selected="${ASdto.latestOperationOT}=='>'">after</option>
+                    </select>
+                    &ensp;
+                    <input type="datetime-local" th:value="${ASdto.latestOperation == null} ? '' : ${ASdto.latestOperation}" th:field="*{latestOperation}">
+                    <br>
+
+                    <br>
+                </div>
+
+                <input type="submit" value="Confirm">
+                <input type="reset" value="Reset">
+            </form>
         </h4>
         <br>
 
+        <br>
+        <h3 th:text="${accountListDto.isEmpty()} ? (${ASdto.isEmpty()}? 'There are no accounts which belong to '+${accountListDto.commonInfo.getFullName()}+'!' : 'There are no accounts according to filter which belong to '+${accountListDto.commonInfo.getFullName()}+'!') : 'All accounts of '+${accountListDto.commonInfo.getFullName()}+':'"></h3>
 
-        <div th:each="account : ${accountListDto.getAccounts()}">
-            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.getAccountId()}">
-                <h4 th:text="${account.getAccountName()}+' (id = '+${account.getAccountId()}+')'"></h4>
-            </a>
-            <h5 th:text="'Balance: '+${account.getBalance()}+' '+${account.getCurrency().toString()}"></h5>
-            <h5 th:text="'Latest operation: '+${account.getLatestOperation().getDayOfMonth()}+' '+${account.getLatestOperation().getMonth().toString()}+' '+${account.getLatestOperation().getYear()}+' '+${account.getLatestOperation().getHour()}+':'+${account.getLatestOperation().getMinute()}+':'+${account.getLatestOperation().getSecond()}"></h5>
-            <h5 th:text="'Number of operations: '+${account.numberOfOperations}"></h5>
-            <h5 th:text="'Account kind: '+${account.accountKind.name}"></h5>
-            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/edit'">
-                <button type="button" class="btn btn-primary">Edit</button>
-            </a>
-            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/deactivate'">
-                <button type="button" class="btn btn-danger">Deactivate</button>
-            </a>
+        <span th:if="${accountListDto.isEmpty()} == false">
             <br>
+            <h4>
+            Pages:&ensp;
+                    <span th:if="${PASdto.page}==0">
+                        <span th:text="${PASdto.page + 1}"></span>
+                        <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages()}">
+                            &nbsp;
+                            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${PASdto.page + 2}"></a>
+                        </span>
+                        <span th:if="${PASdto.page + 1} < ${accountListDto.accounts.getTotalPages() - 1}">
+                            <span th:if="${PASdto.page + 1}!=${accountListDto.accounts.getTotalPages()-2}">&ensp;...</span>
+                            &nbsp;
+                            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${accountListDto.accounts.getTotalPages()}"></a>
+                        </span>
+                    </span>
+                    <span th:if="${PASdto.page}==${accountListDto.accounts.getTotalPages()-1} and ${accountListDto.accounts.getTotalPages()>1}">
+                        <span th:if="1 < ${accountListDto.accounts.getTotalPages()}">
+                            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page=0&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})">1</a>
+                            &nbsp;
+                        </span>
+                        <span th:if="2 < ${accountListDto.accounts.getTotalPages()}">
+                            <span th:if="${accountListDto.accounts.getTotalPages() != 3}">...&ensp;</span>
+                            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages() - 2}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${accountListDto.accounts.getTotalPages() - 1}"></a>
+                            &nbsp;
+                        </span>
+                        <span th:text="${PASdto.page + 1}"></span>
+                    </span>
+                    <span th:if="${PASdto.page} != 0 and (${PASdto.page}!=${accountListDto.accounts.getTotalPages() - 1})">
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page=0&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="'1'"></a>
+                        &nbsp;
+                        <span th:if="${PASdto.page} > 2">...&ensp;</span>
+
+                        <span th:if="${PASdto.page} > 1">
+                            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page - 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${PASdto.page}"></a>
+                            &nbsp;
+                        </span>
+                        <span th:text="${PASdto.page+1}"></span>
+                        &nbsp;
+                        <span th:if="${accountListDto.accounts.getTotalPages()}-2 > ${PASdto.page}">
+                            <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${PASdto.page + 1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${PASdto.page+2}"></a>
+                            &nbsp;
+                        </span>
+
+
+                        <span th:if="${PASdto.page} < ${accountListDto.accounts.getTotalPages() - 3}">...&ensp;</span>
+                        <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'?page='+${accountListDto.accounts.getTotalPages()-1}+'&size='+${PASdto.size}+(${PASdto.order == null || PASdto.order.equals(PASdto.DEFAULT_ORDER)} ? '' : '&order='+${PASdto.order})+(${PASdto.sortBy == null || PASdto.sortBy.equals(PASdto.DEFAULT_SORT_BY)} ? '' : '&sortBy='+${PASdto.sortBy})+(${ASdto.accountName == null || ASdto.accountName.isEmpty()} ? '' : '&accountName='+${ASdto.accountName})+(${ASdto.balance == null} ? '' : '&balance='+${ASdto.balance})+(${ASdto.currency == null} ? '' : '&currency='+${ASdto.currency})+(${ASdto.latestOperation == null} ? '' : '&latestOperation='+${ASdto.latestOperation})+(${ASdto.numberOfOperations == null} ? '' : '&numberOfOperations='+${ASdto.numberOfOperations})+(${ASdto.accountNameOT == null || ASdto.accountNameOT.equals(ASdto.DEFAULT_ACCOUNT_NAME_OPERATION_TYPE)} ? '' : '&accountNameOT='+${ASdto.accountNameOT})+(${ASdto.balanceOT == null || ASdto.balanceOT.equals(ASdto.DEFAULT_BALANCE_OPERATION_TYPE)} ? '' : '&balanceOT='+${ASdto.balanceOT})+(${ASdto.currencyOT == null || ASdto.currencyOT.equals(ASdto.DEFAULT_CURRENCY_OPERATION_TYPE)} ? '' : '&currencyOT='+${ASdto.currencyOT})+(${ASdto.latestOperationOT == null || ASdto.latestOperationOT.equals(ASdto.DEFAULT_LATEST_OPERATION_OPERATION_TYPE)} ? '' : '&latestOperationOT='+${ASdto.latestOperationOT})+(${ASdto.numberOfOperationsOT == null || ASdto.numberOfOperationsOT.equals(ASdto.DEFAULT_NUMBER_OF_OPERATIONS_OPERATION_TYPE)} ? '' : '&'+'numberOfOperationsOT='+${ASdto.numberOfOperationsOT})" th:text="${accountListDto.accounts.getTotalPages()}"></a>
+                    </span>
+            </h4>
             <br>
-        </div>
-    </span>
+
+
+            <div th:each="account : ${accountListDto.getAccounts()}">
+                <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.getAccountId()}">
+                    <h4 th:text="${account.getAccountName()}+' (id = '+${account.getAccountId()}+')'"></h4>
+                </a>
+                <h5 th:text="'Balance: '+${account.getBalance()}+' '+${account.getCurrency().toString()}"></h5>
+                <h5 th:text="'Latest operation: '+${account.getLatestOperation().getDayOfMonth()}+' '+${account.getLatestOperation().getMonth().toString()}+' '+${account.getLatestOperation().getYear()}+' '+${account.getLatestOperation().getHour()}+':'+${account.getLatestOperation().getMinute()}+':'+${account.getLatestOperation().getSecond()}"></h5>
+                <h5 th:text="'Number of operations: '+${account.numberOfOperations}"></h5>
+                <h5 th:text="'Account kind: '+${account.accountKind.name}"></h5>
+                <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/edit'">
+                    <button type="button" class="btn btn-primary">Edit</button>
+                </a>
+                <a th:href="'/clients/'+${accountListDto.commonInfo.clientId}+'/account-'+${account.accountId}+'/deactivate'">
+                    <button type="button" class="btn btn-danger">Deactivate</button>
+                </a>
+                <br>
+                <br>
+            </div>
+        </span>
+    </div>
 
 </body>
 </html>

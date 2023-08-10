@@ -5,7 +5,7 @@ import com.practice.demo.dto.entity_dto.AccountListDto;
 import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.paging_and_sotring_dto.models.AccountPagingAndSortingDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.service.AccountService;
 import com.practice.demo.uri_handler.UriHandler;

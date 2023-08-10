@@ -6,7 +6,7 @@ import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
 import com.practice.demo.exceptions.models.EmptyFieldException;
 import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.exceptions.models.ResourceNotFoundException;
-import com.practice.demo.models.currency_info.CurrencyUnit;
+import com.practice.demo.components.CurrencyUnit;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.specification.Condition;

@@ -1,6 +1,6 @@
 package com.practice.demo.models.entities;
 
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import jakarta.persistence.*;
 import lombok.*;
 

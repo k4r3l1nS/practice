@@ -1,6 +1,6 @@
 package com.practice.demo.dto.entity_dto;
 
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,11 +15,12 @@ public class TransferBetweenAccountsDto {
     private String accountFromName;
     private String accountToName;
     private BigDecimal transactionSum;
-    private Currency currency;
+    private String currency;
 
     public boolean hasEmptyFields() {
 
-        return accountFromName == null ||accountFromName.isEmpty() || accountToName == null
-                || accountToName.isEmpty() || transactionSum == null || currency == null;
+        return accountFromName == null ||accountFromName.isEmpty() ||
+                accountToName == null || accountToName.isEmpty() || transactionSum == null ||
+                currency == null || currency.isEmpty();
     }
 }

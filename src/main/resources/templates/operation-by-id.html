@@ -7,18 +7,21 @@
 </head>
 <body>
     <header th:insert="blocks/header :: header"></header>
+    <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
-    <h3 th:text="'Information about operation id='+${operation.operationId}+':'"></h3>
-    <br>
+    <div class="container">
+        <h3 th:text="'Information about operation id='+${operation.operationId}+':'"></h3>
+        <br>
 
-    <a th:href="'/clients/'+${operation.clientId}+'/account-'+${operation.accountId}">
-        <h4 th:text="'Account: '+${operation.getAccountName()}"></h4>
-    </a>
+        <a th:href="'/clients/'+${operation.clientId}+'/account-'+${operation.accountId}">
+            <h4 th:text="'Account: '+${operation.getAccountName()}"></h4>
+        </a>
 
-    <h4 th:text="'Date: '+${operation.getOperationDateTime().getDayOfMonth()}+' '+${operation.getOperationDateTime().getMonth().toString()}+' '+${operation.getOperationDateTime().getYear()}"></h4>
-    <h4 th:text="'Daytime: '+${operation.getOperationDateTime().getHour()}+':'+${operation.getOperationDateTime().getMinute()}+':'+${operation.getOperationDateTime().getSecond()}"></h4>
-    <br>
-    <h4 th:text="'Main operation'"></h4>
-    <h4 th:text="${operation.getDeposit()} ? 'Deposit: '+${operation.getDeposit()} : 'Withdrawal : '+${operation.getWithdrawal()}"></h4>
+        <h4 th:text="'Date: '+${operation.getOperationDateTime().getDayOfMonth()}+' '+${operation.getOperationDateTime().getMonth().toString()}+' '+${operation.getOperationDateTime().getYear()}"></h4>
+        <h4 th:text="'Daytime: '+${operation.getOperationDateTime().getHour()}+':'+${operation.getOperationDateTime().getMinute()}+':'+${operation.getOperationDateTime().getSecond()}"></h4>
+        <br>
+        <h4 th:text="'Main operation'"></h4>
+        <h4 th:text="(${operation.operationKind.name == 'DEPOSIT'} ? 'Deposit: ' : 'Withdrawal : ')+${operation.getTransactionSum()}"></h4>
+    </div>
 </body>
 </html>

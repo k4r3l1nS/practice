@@ -1,7 +1,7 @@
 package com.practice.demo.dto.entity_dto;
 
 import com.practice.demo.models.db_views.AccountView;
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.models.entities.Account;
 import lombok.*;
 import org.springframework.data.domain.Page;

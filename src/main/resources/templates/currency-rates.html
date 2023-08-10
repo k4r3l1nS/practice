@@ -7,41 +7,57 @@
 </head>
 <body>
   <header th:insert="blocks/header :: header"></header>
-  <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
-  <h3 th:text="'Last update: ' + ${lastUpdate.getLastUpdate()}"></h3>
-  <br>
-  <br>
+  <div class="container">
+      <div th:insert="blocks/uri-navigator :: uri-navigator"></div>
 
-  <h3>
-    Enter currencies to get rate:
-    <br>
-    <br>
-    <form th:action="'/currency-rates'" method="get" th:object="${CRSdto}">
-        <input type="text" maxlength="3" size="2" placeholder="FROM" th:value="${CRSdto.currencyFrom == null} ? '' : ${CRSdto.currencyFrom}" th:field="*{currencyFrom}">
-        &ensp;/&ensp;
-        <input type="text" maxlength="3" size="2" placeholder="TO" th:value="${CRSdto.currencyTo == null} ? '' : ${CRSdto.currencyTo}" th:field="*{currencyTo}">
-        &ensp;
-        <button type="submit">Confirm</button>
-    </form>
-  <br>
-      <span th:if="${rate != null}" th:text="'1 '+${CRSdto.currencyFrom.toUpperCase()}+' = '+${rate}+' '+${CRSdto.currencyTo.toUpperCase()}"></span>
-  </h3>
+      <h3 th:text="'Last update: ' + ${currencyRatesViewList.get(0).lastUpdate}"></h3>
+      <br>
+      <br>
 
-  <br>
-  <span th:if="${rate != null}"><br></span>
+      <h3>
+        Enter currencies to get rate:
+        <br>
+        <br>
+        <form th:action="'/currency-rates'" method="get" th:object="${CRSdto}">
+    <!--        <input type="text" maxlength="3" size="2" placeholder="FROM" th:value="${CRSdto.currencyFrom == null} ? '' : ${CRSdto.currencyFrom}" th:field="*{currencyFrom}">-->
+    <!--        &ensp;/&ensp;-->
+    <!--        <input type="text" maxlength="3" size="2" placeholder="TO" th:value="${CRSdto.currencyTo == null} ? '' : ${CRSdto.currencyTo}" th:field="*{currencyTo}">-->
+    <!--        &ensp;-->
+    <!--        <button type="submit">Confirm</button>-->
+            <select th:field="*{currencyFrom}">
+                <option th:value="null" selected="selected">from</option>
+                <span th:each="view : ${currencyRatesViewList}">
+                    <option th:value="${view.currency}" th:text="${view.currency.name()}"></option>
+                </span>
+            </select>
+            &ensp;/&ensp;
+            <select th:field="*{currencyTo}">
+                <option th:value="null" selected="selected" th:style="'color: blue'">to</option>
+                <span th:each="view : ${currencyRatesViewList}">
+                    <option th:value="${view.currency}" th:text="${view.currency.name()}"></option>
+                </span>
+            </select>
+            &ensp;
+            <button type="submit">Confirm</button>
+        </form>
+      <br>
+          <span th:if="${rate != null}" th:text="'1 '+${CRSdto.currencyFrom}+' = '+${rate}+' '+${CRSdto.currencyTo}"></span>
+      </h3>
 
+      <span th:if="${rate != null}"> <br> </span>
+      <br>
 
-  <h3>All currencies available at the market:</h3>
-  <br>
+      <h3>All currencies available at the market:</h3>
+      <br>
 
-  <h4>
-    <span th:each="currency, index : ${currencies}">
-        <span th:text="${currency.name}"></span>
-        <span th:if="${index.count % 10 != 0 && index.count != index.size}">&nbsp;</span>
-        <span th:if="${index.count % 10 == 0 || index.count == index.size}"><br></span>
-    </span>
-  </h4>
-
+      <h4>
+        <span th:each="view, index : ${currencyRatesViewList}">
+            <span th:text="${view.currency.name}"></span>
+            <span th:if="${index.count % 10 != 0 && index.count != index.size}">&nbsp;</span>
+            <span th:if="${index.count % 10 == 0 || index.count == index.size}"><br></span>
+        </span>
+      </h4>
+  </div>
 </body>
 </html>

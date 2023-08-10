@@ -1,5 +1,6 @@
-package com.practice.demo.models.currency_info;
+package com.practice.demo.components;
 
+import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.service.CurrencyRatesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

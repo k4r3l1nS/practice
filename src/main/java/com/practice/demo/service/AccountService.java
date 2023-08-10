@@ -5,8 +5,8 @@ import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
 import com.practice.demo.exceptions.models.*;
-import com.practice.demo.models.currency_info.Currency;
-import com.practice.demo.models.currency_info.CurrencyUnit;
+import com.practice.demo.models.currency_enum.Currency;
+import com.practice.demo.components.CurrencyUnit;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.AccountView;
@@ -16,6 +16,7 @@ import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.ClientRepository;
 import com.practice.demo.repos.db_view_repos.AccountViewRepository;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,11 +152,19 @@ public class AccountService {
         return accountView.get(0);
     }
 
-    public void transferBetweenAccounts(TransferBetweenAccountsDto transferBetweenAccountsDto, Long clientId) {
+    public void transferBetweenAccounts(TransferBetweenAccountsDto transferBetweenAccountsDto, Long clientId)
+            throws EmptyFieldException, CurrencyNotSupportedException,
+                ResourceNotFoundException, NotEnoughMoneyException {
 
         if (transferBetweenAccountsDto.hasEmptyFields()) {
 
             throw new EmptyFieldException("All fields and radio buttons must be filled in");
+        }
+
+        if (!currencyUnit.isCorrect(transferBetweenAccountsDto.getCurrency())) {
+
+            throw new CurrencyNotSupportedException("Currency with name " +
+                    transferBetweenAccountsDto.getCurrency() + " is not supported");
         }
 
         Account accountFrom = accountRepository
@@ -176,7 +185,8 @@ public class AccountService {
             throw new ResourceNotFoundException("Could not find account to transfer money to");
         }
 
-        if (!accountFrom.isEnoughMoney(currencyUnit.convert(transferBetweenAccountsDto.getCurrency(),
+        if (!accountFrom.isEnoughMoney(currencyUnit
+                .convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
                 accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()))) {
 
             throw new NotEnoughMoneyException("Not enough money on account");
@@ -185,16 +195,18 @@ public class AccountService {
         if (!accountFrom.getId().equals(accountTo.getId())) {
 
             var withdrawalOperation = Operation.getOperation(Operation.OperationKind.WITHDRAWAL,
-                    transferBetweenAccountsDto.getTransactionSum(), transferBetweenAccountsDto.getCurrency());
+                    transferBetweenAccountsDto.getTransactionSum(),
+                    Currency.resolveByName(transferBetweenAccountsDto.getCurrency()));
             var depositOperation = Operation.getOperation(Operation.OperationKind.DEPOSIT,
-                    transferBetweenAccountsDto.getTransactionSum(), transferBetweenAccountsDto.getCurrency());
+                    transferBetweenAccountsDto.getTransactionSum(),
+                    Currency.resolveByName(transferBetweenAccountsDto.getCurrency()));
 
             accountFrom.addOperation(withdrawalOperation,
-                    currencyUnit.convert(transferBetweenAccountsDto.getCurrency(), accountFrom.getCurrency(),
-                            transferBetweenAccountsDto.getTransactionSum()));
+                    currencyUnit.convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
+                            accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()));
             accountTo.addOperation(depositOperation,
-                    currencyUnit.convert(transferBetweenAccountsDto.getCurrency(), accountTo.getCurrency(),
-                            transferBetweenAccountsDto.getTransactionSum()));
+                    currencyUnit.convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
+                            accountTo.getCurrency(), transferBetweenAccountsDto.getTransactionSum()));
         }
     }
 }

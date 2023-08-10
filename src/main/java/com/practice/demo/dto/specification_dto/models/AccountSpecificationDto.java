@@ -1,7 +1,7 @@
 package com.practice.demo.dto.specification_dto.models;
 
 import com.practice.demo.dto.specification_dto.SpecificationDto;
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.specification.Condition;
 import lombok.Builder;

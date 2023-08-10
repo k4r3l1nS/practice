@@ -6,7 +6,7 @@ import com.practice.demo.dto.paging_and_sotring_dto.models.OperationPagingAndSor
 import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.service.OperationService;
 import com.practice.demo.uri_handler.UriHandler;
 import jakarta.servlet.http.HttpServletRequest;

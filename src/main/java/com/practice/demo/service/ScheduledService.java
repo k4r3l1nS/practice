@@ -3,7 +3,7 @@ package com.practice.demo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.demo.dto.json_obtaining.CurrencyRatesJsonDto;
-import com.practice.demo.models.currency_info.Currency;
+import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.CurrencyRates;
 import com.practice.demo.models.entities.LastCurrencyRatesUpdate;
@@ -27,7 +27,6 @@ import java.util.List;
 @Transactional
 public class ScheduledService {
 
-//    private final WebClient webClient;
     private final AccountRepository accountRepository;
     private final CurrencyRatesRepository currencyRatesRepository;
     private final LastCurrencyRatesUpdateRepository lastCurrencyRatesUpdateRepository;

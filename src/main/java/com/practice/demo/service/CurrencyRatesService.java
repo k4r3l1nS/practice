@@ -3,10 +3,10 @@ package com.practice.demo.service;
 import com.practice.demo.dto.entity_dto.CurrencyRatesDto;
 import com.practice.demo.exceptions.models.CurrencyNotSupportedException;
 import com.practice.demo.exceptions.models.EmptyFieldException;
-import com.practice.demo.exceptions.models.ResourceNotFoundException;
-import com.practice.demo.models.currency_info.Currency;
-import com.practice.demo.models.entities.CurrencyRates;
+import com.practice.demo.models.currency_enum.Currency;
+import com.practice.demo.models.db_views.CurrencyRatesView;
 import com.practice.demo.models.entities.LastCurrencyRatesUpdate;
+import com.practice.demo.repos.db_view_repos.CurrencyRatesViewRepository;
 import com.practice.demo.repos.entity_repos.CurrencyRatesRepository;
 import com.practice.demo.repos.entity_repos.LastCurrencyRatesUpdateRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ import java.util.List;
 public class CurrencyRatesService {
 
     private final CurrencyRatesRepository currencyRatesRepository;
+    private final CurrencyRatesViewRepository currencyRatesViewRepository;
     private final LastCurrencyRatesUpdateRepository lastCurrencyRatesUpdateRepository;
 
     public BigDecimal convert(Currency currencyFrom, Currency currencyTo, BigDecimal sum) {
@@ -70,5 +71,10 @@ public class CurrencyRatesService {
         }
 
         return convert(currencyFromEntity.getCurrency(), currencyToEntity.getCurrency(), BigDecimal.ONE);
+    }
+
+    public List<CurrencyRatesView> findAllViews() {
+
+        return currencyRatesViewRepository.findAll();
     }
 }

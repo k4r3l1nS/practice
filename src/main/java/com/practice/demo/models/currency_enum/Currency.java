@@ -1,4 +1,4 @@
-package com.practice.demo.models.currency_info;
+package com.practice.demo.models.currency_enum;
 
 import lombok.Getter;
 
