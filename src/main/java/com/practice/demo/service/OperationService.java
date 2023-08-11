@@ -1,12 +1,13 @@
 package com.practice.demo.service;
 
+import com.practice.demo.components.event.publishers.OperationProceededPublisher;
 import com.practice.demo.dto.entity_dto.OperationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
 import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
 import com.practice.demo.exceptions.models.EmptyFieldException;
 import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.exceptions.models.ResourceNotFoundException;
-import com.practice.demo.components.CurrencyUnit;
+import com.practice.demo.components.units.CurrencyUnit;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.OperationView;
 import com.practice.demo.models.specification.Condition;
@@ -31,6 +32,7 @@ public class OperationService {
     private final OperationRepository operationRepository;
     private final OperationViewRepository operationViewRepository;
 
+    private final OperationProceededPublisher operationProceededPublisher;
     private final CurrencyUnit currencyUnit;
 
     public void addOperation(OperationDto operationDto, Long accountId)
@@ -54,6 +56,9 @@ public class OperationService {
                 account.getCurrency(), operation.getTransactionSum()));
 
         operationRepository.save(operation);
+
+//        operationProceededPublisher.publishEvent(operation.getId(),
+//                "Operation is manually added to account");
     }
 
     public Operation findById(Long operationId) {
@@ -62,9 +67,9 @@ public class OperationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Operation with id = " + operationId + " not found"));
     }
 
-    public OperationView findOperationById(Long operationId) {
+    public OperationView findViewById(Long operationId) {
 
-        return operationRepository.findOperationById(operationId);
+        return operationRepository.findViewById(operationId);
     }
 
     public OperationView findOneOperationView(Long accountId) {

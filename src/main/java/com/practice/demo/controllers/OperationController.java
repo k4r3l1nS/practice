@@ -53,7 +53,7 @@ public class OperationController {
                                 @PathVariable(value="account_id") Long accountId,
                                 @PathVariable(value="operation_id") Long operationId, Model model) {
 
-        OperationView operation = operationService.findOperationById(operationId);
+        OperationView operation = operationService.findViewById(operationId);
 
         model.addAttribute("operation", operation);
 

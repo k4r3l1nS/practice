@@ -162,7 +162,7 @@ public class Account {
      *
      * @return coefficient
      */
-    private BigDecimal getPercentageCoefficient() {
+    public BigDecimal getPercentageCoefficient() {
 
         if (!accountKind.equals(AccountKind.ACCUMULATIVE))
             return null;

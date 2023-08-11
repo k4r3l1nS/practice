@@ -1,12 +1,14 @@
 package com.practice.demo.service;
 
+import com.practice.demo.components.event.publishers.OperationProceededPublisher;
 import com.practice.demo.dto.entity_dto.AccountDto;
 import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
+import com.practice.demo.events.OperationProceededEvent;
 import com.practice.demo.exceptions.models.*;
 import com.practice.demo.models.currency_enum.Currency;
-import com.practice.demo.components.CurrencyUnit;
+import com.practice.demo.components.units.CurrencyUnit;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.db_views.AccountView;
@@ -15,8 +17,8 @@ import com.practice.demo.models.specification.SpecificationBuilder;
 import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.ClientRepository;
 import com.practice.demo.repos.db_view_repos.AccountViewRepository;
+import com.practice.demo.repos.entity_repos.OperationRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,9 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountViewRepository accountViewRepository;
 
+    private final OperationRepository operationRepository;
+
+    private final OperationProceededPublisher operationProceededPublisher;
     private final CurrencyUnit currencyUnit;
 
     public void addAccount(AccountDto accountDto, Long clientId)
@@ -67,13 +72,15 @@ public class AccountService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
         var account = accountDto.toEntity();
 
-        account.addOperation(Operation.getOperation(Operation.OperationKind.DEPOSIT,
-                accountDto.getBalance(), account.getCurrency()),
-                currencyUnit.convert(Currency.resolveByName(accountDto.getCurrency()),
+        Operation firstDeposit = Operation.getOperation(Operation.OperationKind.DEPOSIT,
+                accountDto.getBalance(), account.getCurrency());
+
+        account.addOperation(firstDeposit, currencyUnit.convert(Currency.resolveByName(accountDto.getCurrency()),
                         account.getCurrency(), accountDto.getBalance()));
 
-        client.addAccount(account);
+//        operationProceededPublisher.publishEvent(firstDeposit.getId(), "First deposit added");
 
+        client.addAccount(account);
         accountRepository.save(account);
     }
 
@@ -147,14 +154,14 @@ public class AccountService {
                         .build())
                 .build();
 
-        List<AccountView> accountView =  accountViewRepository.findAll(specification);
+        List<AccountView> accountView = accountViewRepository.findAll(specification);
 
         return accountView.get(0);
     }
 
     public void transferBetweenAccounts(TransferBetweenAccountsDto transferBetweenAccountsDto, Long clientId)
             throws EmptyFieldException, CurrencyNotSupportedException,
-                ResourceNotFoundException, NotEnoughMoneyException {
+            ResourceNotFoundException, NotEnoughMoneyException {
 
         if (transferBetweenAccountsDto.hasEmptyFields()) {
 
@@ -187,7 +194,7 @@ public class AccountService {
 
         if (!accountFrom.isEnoughMoney(currencyUnit
                 .convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
-                accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()))) {
+                        accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()))) {
 
             throw new NotEnoughMoneyException("Not enough money on account");
         }
@@ -207,6 +214,11 @@ public class AccountService {
             accountTo.addOperation(depositOperation,
                     currencyUnit.convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
                             accountTo.getCurrency(), transferBetweenAccountsDto.getTransactionSum()));
+
+//            operationProceededPublisher.publishEvent(withdrawalOperation.getId(),
+//                    "Transfer transaction to account: " + accountTo.getName());
+//            operationProceededPublisher.publishEvent(depositOperation.getId(),
+//                    "Deposit transction from account: " + accountFrom.getName());
         }
     }
 }

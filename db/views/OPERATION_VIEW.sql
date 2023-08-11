@@ -4,6 +4,7 @@ select
     o.id as operation_id,
     o.account_id,
     c.id as client_id,
+    c.email as client_email,
     o.operation_date,
     o.transaction_sum,
     o.operation_kind,

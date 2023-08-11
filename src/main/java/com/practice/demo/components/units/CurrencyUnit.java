@@ -1,4 +1,4 @@
-package com.practice.demo.components;
+package com.practice.demo.components.units;
 
 import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.service.CurrencyRatesService;

@@ -2,14 +2,17 @@ package com.practice.demo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.demo.components.event.publishers.OperationProceededPublisher;
 import com.practice.demo.dto.json_obtaining.CurrencyRatesJsonDto;
 import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.entities.CurrencyRates;
 import com.practice.demo.models.entities.LastCurrencyRatesUpdate;
+import com.practice.demo.models.entities.Operation;
 import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.CurrencyRatesRepository;
 import com.practice.demo.repos.entity_repos.LastCurrencyRatesUpdateRepository;
+import com.practice.demo.repos.entity_repos.OperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -28,13 +31,17 @@ import java.util.List;
 public class ScheduledService {
 
     private final AccountRepository accountRepository;
+    private final OperationRepository operationRepository;
     private final CurrencyRatesRepository currencyRatesRepository;
     private final LastCurrencyRatesUpdateRepository lastCurrencyRatesUpdateRepository;
+
+    private final OperationProceededPublisher operationProceededPublisher;
 
     /**
      * Capitalizes active accumulation accounts at everyday midnight
      */
     @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(fixedRate = 10000)
     public void capitalize() {
 
         List<Account> accountList = accountRepository.findActiveAccumulationAccounts();
@@ -42,6 +49,16 @@ public class ScheduledService {
         for (var account : accountList) {
 
             account.capitalize();
+
+            var finalSum = account.getPercentageCoefficient().multiply(account.getBalance());
+
+            var operation = Operation.getOperation(Operation.OperationKind.DEPOSIT,
+                    finalSum, account.getCurrency());
+
+
+            account.addOperation(operation, finalSum);
+
+//            operationProceededPublisher.publishEvent(operation.getId(), "Capitalization");
         }
     }
 
@@ -58,6 +75,14 @@ public class ScheduledService {
                 .build();
 
         String json = webClient.get().retrieve().bodyToMono(String.class).block();
+        json = json.substring(0, json.indexOf("\"AUD\":")) +
+                "\"RUB\": {\n" +
+                "\t\t\t\"CharCode\": " + "\"RUB\",\n" +
+                "\t\t\t\"Nominal\": " + "1,\n" +
+                "\t\t\t\"Value\": " + "1.0\n" +
+                "\t\t},\n" +
+                "\t\t" +
+                json.substring(json.indexOf("\"AUD\":"));
 
         CurrencyRatesJsonDto currencyRatesJsonDto = new ObjectMapper().readValue(json, CurrencyRatesJsonDto.class);
 

@@ -12,5 +12,5 @@ import java.util.List;
 public interface OperationRepository extends JpaRepository<Operation, Long> {
 
     @Query("select E from OperationView E where E.operationId = :operationId")
-    OperationView findOperationById(Long operationId);
+    OperationView findViewById(Long operationId);
 }

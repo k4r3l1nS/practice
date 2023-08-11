@@ -1,5 +1,6 @@
 package com.practice.demo.service;
 
+import com.practice.demo.components.event.publishers.OperationProceededPublisher;
 import com.practice.demo.dto.entity_dto.ClientDto;
 import com.practice.demo.dto.specification_dto.models.ClientSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.models.ClientPagingAndSortingDto;
@@ -9,16 +10,13 @@ import com.practice.demo.exceptions.models.ResourceNotFoundException;
 import com.practice.demo.models.entities.Client;
 import com.practice.demo.models.db_views.ClientView;
 import com.practice.demo.models.specification.SpecificationBuilder;
-import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.ClientRepository;
 import com.practice.demo.repos.db_view_repos.ClientViewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service

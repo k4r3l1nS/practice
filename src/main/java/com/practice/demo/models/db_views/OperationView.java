@@ -22,6 +22,9 @@ public class OperationView {
     @Column(name = "account_id")
     private Long accountId;
 
+    @Column(name = "client_email")
+    private String clientEmail;
+
     @Column(name = "client_id")
     private Long clientId;
 
