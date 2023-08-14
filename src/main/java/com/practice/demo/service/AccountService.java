@@ -1,11 +1,11 @@
 package com.practice.demo.service;
 
 import com.practice.demo.components.event.publishers.OperationProceededPublisher;
+import com.practice.demo.custom_annotations.DtoCorrectnessCheck;
 import com.practice.demo.dto.entity_dto.AccountDto;
 import com.practice.demo.dto.entity_dto.TransferBetweenAccountsDto;
 import com.practice.demo.dto.specification_dto.models.AccountSpecificationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
-import com.practice.demo.events.OperationProceededEvent;
 import com.practice.demo.exceptions.models.*;
 import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.components.units.CurrencyUnit;
@@ -17,7 +17,6 @@ import com.practice.demo.models.specification.SpecificationBuilder;
 import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.ClientRepository;
 import com.practice.demo.repos.db_view_repos.AccountViewRepository;
-import com.practice.demo.repos.entity_repos.OperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -37,37 +36,12 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountViewRepository accountViewRepository;
 
-    private final OperationRepository operationRepository;
-
-    private final OperationProceededPublisher operationProceededPublisher;
     private final CurrencyUnit currencyUnit;
 
-    public void addAccount(AccountDto accountDto, Long clientId)
-            throws AccountNameAlreadyTakenException,
-            InvalidSumInputException, EmptyFieldException, ResourceNotFoundException {
+    private final OperationProceededPublisher operationProceededPublisher;
 
-        if (accountDto.hasEmptyFields()) {
-
-            throw new EmptyFieldException("All fields and radio buttons must be filled in");
-        }
-
-        if (!currencyUnit.isCorrect(accountDto.getCurrency())) {
-
-            throw new CurrencyNotSupportedException("Currency with name " +
-                    accountDto.getCurrency() + " is not supported");
-        }
-
-        if (accountRepository.existsByName(accountDto.getAccountName())
-                && accountRepository.findByName(accountDto.getAccountName()).isActive()) {
-
-            throw new AccountNameAlreadyTakenException("This account name is already taken");
-        }
-
-        if (accountDto.getBalance().compareTo(BigDecimal.ZERO) <= 0) {
-
-            throw new InvalidSumInputException("First deposit is mandatory and must be above 0");
-        }
-
+    @DtoCorrectnessCheck(filled = true)
+    public void addAccount(AccountDto accountDto, Long clientId) {
         var client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client with id = " + clientId + " not found"));
         var account = accountDto.toEntity();
@@ -78,12 +52,13 @@ public class AccountService {
         account.addOperation(firstDeposit, currencyUnit.convert(Currency.resolveByName(accountDto.getCurrency()),
                         account.getCurrency(), accountDto.getBalance()));
 
-//        operationProceededPublisher.publishEvent(firstDeposit.getId(), "First deposit added");
-
         client.addAccount(account);
         accountRepository.save(account);
+
+        operationProceededPublisher.publishEvent(firstDeposit);
     }
 
+    @DtoCorrectnessCheck
     public void updateAccount(AccountDto accountDto, Long accountId) {
 
         if (accountRepository.existsByName(accountDto.getAccountName())
@@ -160,19 +135,10 @@ public class AccountService {
     }
 
     public void transferBetweenAccounts(TransferBetweenAccountsDto transferBetweenAccountsDto, Long clientId)
-            throws EmptyFieldException, CurrencyNotSupportedException,
-            ResourceNotFoundException, NotEnoughMoneyException {
+            throws EmptyFieldException, ResourceNotFoundException{
 
-        if (transferBetweenAccountsDto.hasEmptyFields()) {
-
-            throw new EmptyFieldException("All fields and radio buttons must be filled in");
-        }
-
-        if (!currencyUnit.isCorrect(transferBetweenAccountsDto.getCurrency())) {
-
-            throw new CurrencyNotSupportedException("Currency with name " +
-                    transferBetweenAccountsDto.getCurrency() + " is not supported");
-        }
+        transferBetweenAccountsDto.throwIfNotFilled();
+        currencyUnit.throwIfNotSupported(transferBetweenAccountsDto.getCurrency());
 
         Account accountFrom = accountRepository
                 .findByNameAndClientId(transferBetweenAccountsDto.getAccountFromName(), clientId);
@@ -192,12 +158,9 @@ public class AccountService {
             throw new ResourceNotFoundException("Could not find account to transfer money to");
         }
 
-        if (!accountFrom.isEnoughMoney(currencyUnit
+        accountFrom.throwIfNotEnoughMoney(currencyUnit
                 .convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
-                        accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()))) {
-
-            throw new NotEnoughMoneyException("Not enough money on account");
-        }
+                        accountFrom.getCurrency(), transferBetweenAccountsDto.getTransactionSum()));
 
         if (!accountFrom.getId().equals(accountTo.getId())) {
 
@@ -215,10 +178,8 @@ public class AccountService {
                     currencyUnit.convert(Currency.resolveByName(transferBetweenAccountsDto.getCurrency()),
                             accountTo.getCurrency(), transferBetweenAccountsDto.getTransactionSum()));
 
-//            operationProceededPublisher.publishEvent(withdrawalOperation.getId(),
-//                    "Transfer transaction to account: " + accountTo.getName());
-//            operationProceededPublisher.publishEvent(depositOperation.getId(),
-//                    "Deposit transction from account: " + accountFrom.getName());
+            operationProceededPublisher.publishEvent(withdrawalOperation);
+            operationProceededPublisher.publishEvent(depositOperation);
         }
     }
 }

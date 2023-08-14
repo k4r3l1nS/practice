@@ -12,7 +12,8 @@ public class OperationProceededListener {
     @EventListener(OperationProceededEvent.class)
     public void log(OperationProceededEvent event) {
 
-        System.out.println("[log]" + LocalDateTime.now() + " :: Reached listener with message: " + event.getContextMessage());
+        System.out.println("[log]" + LocalDateTime.now() + " :: Reached listener with operation id = "
+                + event.getOperation().getId());
     }
 
     @EventListener(OperationProceededEvent.class)

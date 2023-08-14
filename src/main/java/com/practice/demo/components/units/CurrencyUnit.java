@@ -1,5 +1,6 @@
 package com.practice.demo.components.units;
 
+import com.practice.demo.exceptions.models.CurrencyNotSupportedException;
 import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.service.CurrencyRatesService;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,14 @@ public class CurrencyUnit {
         }
 
         return true;
+    }
+
+    public void throwIfNotSupported(String currency) {
+
+        if (!isCorrect(currency)) {
+
+            throw new CurrencyNotSupportedException("Currency with name " +
+                    currency + " is not supported");
+        }
     }
 }

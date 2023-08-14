@@ -27,7 +27,7 @@ class ClientServiceFullContextTest {
                 .build());
 
         applicationEvents.stream(OperationProceededEvent.class).forEach(operationProceededEvent ->
-                System.out.println(":: " + operationProceededEvent.getContextMessage()));
+                System.out.println(":: " + operationProceededEvent.getOperation().getId()));
         System.out.println(applicationEvents.stream(OperationProceededEvent.class).count());
     }
 }

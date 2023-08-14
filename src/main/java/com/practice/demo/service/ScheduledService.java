@@ -12,7 +12,6 @@ import com.practice.demo.models.entities.Operation;
 import com.practice.demo.repos.entity_repos.AccountRepository;
 import com.practice.demo.repos.entity_repos.CurrencyRatesRepository;
 import com.practice.demo.repos.entity_repos.LastCurrencyRatesUpdateRepository;
-import com.practice.demo.repos.entity_repos.OperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,7 +30,6 @@ import java.util.List;
 public class ScheduledService {
 
     private final AccountRepository accountRepository;
-    private final OperationRepository operationRepository;
     private final CurrencyRatesRepository currencyRatesRepository;
     private final LastCurrencyRatesUpdateRepository lastCurrencyRatesUpdateRepository;
 
@@ -58,7 +56,7 @@ public class ScheduledService {
 
             account.addOperation(operation, finalSum);
 
-//            operationProceededPublisher.publishEvent(operation.getId(), "Capitalization");
+            operationProceededPublisher.publishEvent(operation);
         }
     }
 

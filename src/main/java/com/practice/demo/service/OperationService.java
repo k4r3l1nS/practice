@@ -1,11 +1,10 @@
 package com.practice.demo.service;
 
 import com.practice.demo.components.event.publishers.OperationProceededPublisher;
+import com.practice.demo.custom_annotations.DtoCorrectnessCheck;
 import com.practice.demo.dto.entity_dto.OperationDto;
 import com.practice.demo.dto.paging_and_sotring_dto.PagingAndSortingDto;
 import com.practice.demo.dto.specification_dto.models.OperationSpecificationDto;
-import com.practice.demo.exceptions.models.EmptyFieldException;
-import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.exceptions.models.ResourceNotFoundException;
 import com.practice.demo.components.units.CurrencyUnit;
 import com.practice.demo.models.entities.Operation;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -32,21 +30,12 @@ public class OperationService {
     private final OperationRepository operationRepository;
     private final OperationViewRepository operationViewRepository;
 
-    private final OperationProceededPublisher operationProceededPublisher;
     private final CurrencyUnit currencyUnit;
 
-    public void addOperation(OperationDto operationDto, Long accountId)
-            throws InvalidSumInputException, EmptyFieldException {
+    private final OperationProceededPublisher operationProceededPublisher;
 
-        if (operationDto.hasEmptyFields()) {
-
-            throw new EmptyFieldException("All fields and radio buttons must be filled in");
-        }
-
-        if (operationDto.getTransactionSum().compareTo(BigDecimal.ZERO) <= 0) {
-
-            throw new InvalidSumInputException("Transaction sum must be above 0");
-        }
+    @DtoCorrectnessCheck(filled = true)
+    public void addOperation(OperationDto operationDto, Long accountId) {
 
         var account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account with id = " + accountId + " not found"));
@@ -57,8 +46,7 @@ public class OperationService {
 
         operationRepository.save(operation);
 
-//        operationProceededPublisher.publishEvent(operation.getId(),
-//                "Operation is manually added to account");
+        operationProceededPublisher.publishEvent(operation);
     }
 
     public Operation findById(Long operationId) {

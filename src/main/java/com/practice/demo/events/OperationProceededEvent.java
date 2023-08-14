@@ -1,6 +1,6 @@
 package com.practice.demo.events;
 
-import com.practice.demo.models.db_views.OperationView;
+import com.practice.demo.models.entities.Operation;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
@@ -9,15 +9,14 @@ import org.springframework.context.ApplicationEvent;
 @Setter
 public class OperationProceededEvent extends ApplicationEvent {
 
-    private String contextMessage;
-    private OperationView operationView;
+    private Operation operation;
     private String email;
 
-    public OperationProceededEvent(Object source, OperationView operationView, String contextMessage) {
+    public OperationProceededEvent(Object source, Operation operation) {
 
         super(source);
 
-        this.operationView = operationView;
-        this.contextMessage = contextMessage;
+        this.operation = operation;
+        email = operation.getAccount().getClient().getEmail();
     }
 }

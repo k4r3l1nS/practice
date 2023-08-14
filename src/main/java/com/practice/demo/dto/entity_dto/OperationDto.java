@@ -1,5 +1,7 @@
 package com.practice.demo.dto.entity_dto;
 
+import com.practice.demo.exceptions.models.EmptyFieldException;
+import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.models.currency_enum.Currency;
 import lombok.Builder;
@@ -30,8 +32,24 @@ public class OperationDto {
         return operation;
     }
 
-    public boolean hasEmptyFields() {
+    private boolean hasEmptyFields() {
 
         return operationKind == null || transactionSum == null || currencyFrom == null;
+    }
+
+    public void throwIfNotFilled() {
+
+        if (hasEmptyFields()) {
+
+            throw new EmptyFieldException("All fields and radio buttons must be filled in");
+        }
+    }
+
+    public void throwIfInvalid() {
+
+        if (transactionSum.compareTo(BigDecimal.ZERO) <= 0) {
+
+            throw new InvalidSumInputException("Transaction sum must be above 0");
+        }
     }
 }

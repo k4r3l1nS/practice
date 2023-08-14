@@ -1,5 +1,7 @@
 package com.practice.demo.dto.entity_dto;
 
+import com.practice.demo.exceptions.models.EmptyFieldException;
+import com.practice.demo.exceptions.models.InvalidSumInputException;
 import com.practice.demo.models.entities.Account;
 import com.practice.demo.models.currency_enum.Currency;
 import lombok.Builder;
@@ -58,9 +60,25 @@ public class AccountDto {
         }
     }
 
-    public boolean hasEmptyFields() {
+    private boolean hasEmptyFields() {
 
         return accountName == null || accountName.isEmpty() || balance == null ||
                 currency == null || accountKind == null;
     }
+
+    public void throwIfNotFilled() {
+
+        if (hasEmptyFields()) {
+
+            throw new EmptyFieldException("All fields and radio buttons must be filled in");
+        }
+
+
+        if (balance.compareTo(BigDecimal.ZERO) <= 0) {
+
+            throw new InvalidSumInputException("First deposit is mandatory and must be above 0");
+        }
+    }
+
+
 }

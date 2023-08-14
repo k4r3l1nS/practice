@@ -1,6 +1,6 @@
 package com.practice.demo.dto.entity_dto;
 
-import com.practice.demo.models.currency_enum.Currency;
+import com.practice.demo.exceptions.models.EmptyFieldException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,10 +17,18 @@ public class TransferBetweenAccountsDto {
     private BigDecimal transactionSum;
     private String currency;
 
-    public boolean hasEmptyFields() {
+    private boolean hasEmptyFields() {
 
         return accountFromName == null ||accountFromName.isEmpty() ||
                 accountToName == null || accountToName.isEmpty() || transactionSum == null ||
                 currency == null || currency.isEmpty();
+    }
+
+    public void throwIfNotFilled() {
+
+        if (hasEmptyFields()) {
+
+            throw new EmptyFieldException("All fields and radio buttons must be filled in");
+        }
     }
 }

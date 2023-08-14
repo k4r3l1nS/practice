@@ -1,5 +1,6 @@
 package com.practice.demo.dto.entity_dto;
 
+import com.practice.demo.exceptions.models.EmptyFieldException;
 import com.practice.demo.models.entities.Client;
 import lombok.*;
 
@@ -47,10 +48,18 @@ public class ClientDto {
             entity.setEmail(this.email);
     }
 
-    public boolean hasEmptyFields() {
+    private boolean hasEmptyFields() {
 
         return firstName == null || firstName.isEmpty() || lastName == null ||
                 lastName.isEmpty() || email == null || email.isEmpty() ||
                 birthDate == null;
+    }
+
+    public void throwIfNotFilled() {
+
+        if (hasEmptyFields()) {
+
+            throw new EmptyFieldException("All fields must be filled in");
+        }
     }
 }

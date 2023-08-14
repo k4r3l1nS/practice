@@ -6,7 +6,6 @@ import com.practice.demo.models.currency_enum.Currency;
 import com.practice.demo.models.entities.Operation;
 import com.practice.demo.service.OperationService;
 import com.practice.demo.service.ScheduledService;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

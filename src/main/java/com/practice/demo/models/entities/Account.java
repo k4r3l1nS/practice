@@ -134,7 +134,8 @@ public class Account {
      * @param operation operation entity
      * @throws NotEnoughMoneyException not enough money on balance
      */
-    public void addOperation(Operation operation, BigDecimal finalSum) throws NotEnoughMoneyException {
+//    @PublishOperation
+    public void addOperation(Operation operation, BigDecimal finalSum) {
 
         Objects.requireNonNull(operation);
 
@@ -144,11 +145,7 @@ public class Account {
 
             case WITHDRAWAL -> {
 
-                if (!isEnoughMoney(finalSum)) {
-
-                    throw new NotEnoughMoneyException("There is not enough money on balance");
-                }
-
+                throwIfNotEnoughMoney(finalSum);
                 balance = balance.subtract(finalSum);
             }
         }
@@ -181,8 +178,16 @@ public class Account {
      * @param sum withdrawal sum
      * @return whether if enough money or not
      */
-    public boolean isEnoughMoney(BigDecimal sum) {
+    private boolean isEnoughMoney(BigDecimal sum) {
 
         return balance.compareTo(sum) >= 0;
+    }
+
+    public void throwIfNotEnoughMoney(BigDecimal finalSum) {
+
+        if (!isEnoughMoney(finalSum)) {
+
+            throw new NotEnoughMoneyException("There is not enough money on balance");
+        }
     }
 }
